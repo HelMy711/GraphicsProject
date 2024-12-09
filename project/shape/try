@@ -1,0 +1,354 @@
+angle-=0.1f;
+            if(b==-250)
+                b=-450;
+            if(c==350)
+                c=150;
+//            m+=speed;
+//            if(m==200)
+//                speed=-speed;
+//            if(m==200)
+//     xPosition+=speed;
+//        if (xPosition<0||xPosition>maxXPosition) {
+//            speed = -speed;
+//            //gl.glRotated(180,0,1,0);
+//
+//        }           m=250;
+
+//
+//            if (angle<10)
+//                angle=0;
+// المقلة اليسار
+//            gl.glPushMatrix();
+//            gl.glTranslated(b++, n, 0);
+//            gl.glRotated(angle, 0, 0, 1);
+            // y1=(Math.sin(((x1)/60.0)+180)*100)+250;
+            gl.glPushMatrix();
+            gl.glTranslated(x,y,0);
+            angle+=.5f;
+            if(angle>Math.PI)
+                angle=0;
+//            if (x1>-180){
+//                x1=-450;
+            //}
+
+            drawEye2(gl);
+            gl.glPopMatrix();
+// المقلة اليمين
+//
+            gl.glPushMatrix();
+           /*
+            y2=(100*Math.sin(((-x2)/60.0)+180))+200;
+            gl.glTranslated(x2=x2+0.65, y2, 0);
+            if (x2>420){
+                x2=150;
+            }
+*/
+            double ONE_DEGREE=(Math.PI/180);
+            double THREE_SIXTY=Math.PI;
+
+            for (double a0=0;a0<THREE_SIXTY;a0+=ONE_DEGREE) {
+                double x =  200 * Math.cos(a0)+50;
+                double y =  200 * Math.sin(a0)+70;
+            }
+            //gl.glTranslated(x=x+0.5,y,0);
+            drawEye2(gl);
+            gl.glPopMatrix();
+
+import javax.media.opengl.GL;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLEventListener;
+class CuteOwl implements GLEventListener {
+
+gl.glPushMatrix();
+//            y1=(Math.sin(((x1)/60.0)+180)*100)+250;
+//            gl.glTranslated(x1=x1+0.5,y1,0);
+//            if (x1>-200){
+//                x1=-450;
+//            }
+//            gl.glRotated(angle, 0, 0, 1);
+//            gl.glTranslated(c++, n, 0);
+
+
+
+
+    @Override
+    public void init(GLAutoDrawable drawable) {
+        GL gl = drawable.getGL();
+        // color of the background
+        gl.glClearColor(.80f, .90f, .90f, 1.0f);
+//        gl.glViewport(-800, 800, -800, 800);
+        gl.glMatrixMode(GL.GL_PROJECTION);
+        gl.glLoadIdentity();
+
+
+        gl.glOrtho(-600, 600, -600, 600, -1.0, 1.0);
+    }
+    double x=0;
+    double y=0;
+    double x1=-450;
+    double y1=(Math.sin(((x1)/60.0)+180)*100)+250;
+    double x2=150;
+    double y2=(Math.sin(((x2)/60.0)+180)*100)+250;
+
+     @Override
+    public void display(GLAutoDrawable drawable) {
+        GL gl = drawable.getGL();
+        gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+
+        //  up background
+        gl.glColor3f(128/255f, 0, 1);
+        gl.glBegin(GL.GL_QUADS);
+        gl.glVertex2i ( -800,-800);
+        gl.glVertex2i ( 800,-800);
+        gl.glVertex2i ( 800,800);
+        gl.glVertex2i ( -800,800);
+        gl.glEnd();
+
+
+        gl.glColor3f(1.0f, 220/255f, 1/255f);
+        gl.glBegin(GL.GL_TRIANGLES);
+        gl.glVertex2i ( -200,200);
+        gl.glVertex2i ( 200,200);
+        gl.glVertex2i ( 0,-200);
+        gl.glEnd();
+
+
+        gl.glPushMatrix();
+        gl.glTranslated(300, 350, 0);
+        draweye(gl);
+        gl.glPopMatrix();
+
+        gl.glPushMatrix();
+        gl.glTranslated(-300, 350, 0);
+        draweye(gl);
+        gl.glPopMatrix();
+
+
+        gl.glPushMatrix();
+         y1=(Math.sin(((x1)/60.0)+180)*100)+250;
+        gl.glTranslated(x1=x1+0.5,y1,0);
+        if (x1>-200){
+            x1=-450;
+        }
+        draweye2(gl);
+        gl.glPopMatrix();
+
+        gl.glPushMatrix();
+         y2=(Math.sin(((-x2)/60.0)+180)*80)+200;
+         gl.glTranslated(x2=x2+0.5, y2, 0);
+         if (x2>400){
+             x2=150;
+         }
+        draweye2(gl);
+        gl.glPopMatrix();
+
+
+
+        gl.glPushMatrix();
+        gl.glTranslated(x=x+3, 0, 0);
+        gl.glRotated(0, 0, 0, 1);
+        gl.glScaled(1, 1, 0);
+        drawBall(gl);
+        gl.glPopMatrix();
+
+    }
+    private void draweye(GL gl) {
+        gl.glColor3f(1.0f, 1.0f, 01.0f);
+        double radius0=350;
+        double ONE_DEGREE=(Math.PI/180);
+        double THREE_SIXTY=2*Math.PI;
+        gl.glBegin(GL.GL_POLYGON);
+        for (double a0=0;a0<THREE_SIXTY;a0+=ONE_DEGREE){
+            int x=(int)(radius0*Math.cos(a0))+ 0;
+            int y=(int)(radius0*Math.sin(a0))+0;
+            gl.glVertex2d(x,y);
+        }
+        gl.glEnd();
+
+    }
+    private void draweye2(GL gl) {
+        gl.glColor3f(.0f, .0f, 0.0f);
+        double radius0=100;
+        double ONE_DEGREE=(Math.PI/180);
+        double THREE_SIXTY=2*Math.PI;
+        gl.glBegin(GL.GL_POLYGON);
+        for (double a0=0;a0<THREE_SIXTY;a0+=ONE_DEGREE){
+            int x=(int)(radius0*Math.cos(a0))+ 0;
+            int y=(int)(radius0*Math.sin(a0))+ 0;
+            gl.glVertex2d(x,y);
+        }
+        gl.glEnd();
+
+    }
+
+    private void drawBall(GL gl) {
+        gl.glColor3f(1.0f, .0f, 0.0f);
+        double radius0=50;
+        double ONE_DEGREE=(Math.PI/180);
+        double THREE_SIXTY=2*Math.PI;
+        gl.glBegin(GL.GL_POLYGON);
+        for (double a0=0;a0<THREE_SIXTY;a0+=ONE_DEGREE){
+            int x=(int)(radius0*Math.cos(a0))+ -600;
+            int y=(int)(radius0*Math.sin(a0))+ -600;
+            gl.glVertex2d(x,y);
+        }
+        gl.glEnd();
+
+    }
+    @Override
+    public void reshape(GLAutoDrawable glAutoDrawable, int i, int i1, int i2, int i3) {
+    }
+    @Override
+    public void displayChanged(
+            GLAutoDrawable drawable,
+            boolean modeChanged, boolean deviceChanged
+    ) {}
+    public void dispose(GLAutoDrawable arg0) {
+        // TODO Auto-generated method stub
+    }
+}
+
+import javax.media.opengl.GL;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLEventListener;
+class CuteOwl implements GLEventListener {
+
+    @Override
+    public void init(GLAutoDrawable drawable) {
+        GL gl = drawable.getGL();
+        // color of the background
+        gl.glClearColor(.80f, .90f, .90f, 1.0f);
+//        gl.glViewport(-800, 800, -800, 800);
+        gl.glMatrixMode(GL.GL_PROJECTION);
+        gl.glLoadIdentity();
+
+
+        gl.glOrtho(-600, 600, -600, 600, -1.0, 1.0);
+    }
+    double x=0;
+    double y=0;
+    double x1=-450;
+    double y1=(Math.sin(((x1)/60.0)+180)*100)+250;
+    double x2=150;
+    double y2=(Math.sin(((x2)/60.0)+180)*100)+250;
+
+     @Override
+    public void display(GLAutoDrawable drawable) {
+        GL gl = drawable.getGL();
+        gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+
+        //  up background
+        gl.glColor3f(128/255f, 0, 1);
+        gl.glBegin(GL.GL_QUADS);
+        gl.glVertex2i ( -800,-800);
+        gl.glVertex2i ( 800,-800);
+        gl.glVertex2i ( 800,800);
+        gl.glVertex2i ( -800,800);
+        gl.glEnd();
+
+
+        gl.glColor3f(1.0f, 220/255f, 1/255f);
+        gl.glBegin(GL.GL_TRIANGLES);
+        gl.glVertex2i ( -200,200);
+        gl.glVertex2i ( 200,200);
+        gl.glVertex2i ( 0,-200);
+        gl.glEnd();
+
+
+        gl.glPushMatrix();
+        gl.glTranslated(300, 350, 0);
+        draweye(gl);
+        gl.glPopMatrix();
+
+        gl.glPushMatrix();
+        gl.glTranslated(-300, 350, 0);
+        draweye(gl);
+        gl.glPopMatrix();
+
+
+        gl.glPushMatrix();
+         y1=(Math.sin(((x1)/60.0)+180)*100)+250;
+        gl.glTranslated(x1=x1+0.5,y1,0);
+        if (x1>-200){
+            x1=-450;
+        }
+        draweye2(gl);
+        gl.glPopMatrix();
+
+        gl.glPushMatrix();
+         y2=(Math.sin(((-x2)/60.0)+180)*80)+200;
+         gl.glTranslated(x2=x2+0.5, y2, 0);
+         if (x2>400){
+             x2=150;
+         }
+        draweye2(gl);
+        gl.glPopMatrix();
+
+
+
+        gl.glPushMatrix();
+        gl.glTranslated(x=x+3, 0, 0);
+         if (x>1200){
+             x=-650;
+         }
+        gl.glScaled(1, 1, 0);
+        drawBall(gl);
+
+        gl.glPopMatrix();
+
+    }
+    private void draweye(GL gl) {
+        gl.glColor3f(1.0f, 1.0f, 01.0f);
+        double radius0=350;
+        double ONE_DEGREE=(Math.PI/180);
+        double THREE_SIXTY=2*Math.PI;
+        gl.glBegin(GL.GL_POLYGON);
+        for (double a0=0;a0<THREE_SIXTY;a0+=ONE_DEGREE){
+            int x=(int)(radius0*Math.cos(a0))+ 0;
+            int y=(int)(radius0*Math.sin(a0))+0;
+            gl.glVertex2d(x,y);
+        }
+        gl.glEnd();
+
+    }
+    private void draweye2(GL gl) {
+        gl.glColor3f(.0f, .0f, 0.0f);
+        double radius0=100;
+        double ONE_DEGREE=(Math.PI/180);
+        double THREE_SIXTY=2*Math.PI;
+        gl.glBegin(GL.GL_POLYGON);
+        for (double a0=0;a0<THREE_SIXTY;a0+=ONE_DEGREE){
+            int x=(int)(radius0*Math.cos(a0))+ 0;
+            int y=(int)(radius0*Math.sin(a0))+ 0;
+            gl.glVertex2d(x,y);
+        }
+        gl.glEnd();
+
+    }
+
+    private void drawBall(GL gl) {
+        gl.glColor3f(1.0f, .0f, 0.0f);
+        double radius0=50;
+        double ONE_DEGREE=(Math.PI/180);
+        double THREE_SIXTY=2*Math.PI;
+        gl.glBegin(GL.GL_POLYGON);
+        for (double a0=0;a0<THREE_SIXTY;a0+=ONE_DEGREE){
+            int x=(int)(radius0*Math.cos(a0))+ -600;
+            int y=(int)(radius0*Math.sin(a0))+ -600;
+            gl.glVertex2d(x,y);
+        }
+        gl.glEnd();
+
+    }
+    @Override
+    public void reshape(GLAutoDrawable glAutoDrawable, int i, int i1, int i2, int i3) {
+    }
+    @Override
+    public void displayChanged(
+            GLAutoDrawable drawable,
+            boolean modeChanged, boolean deviceChanged
+    ) {}
+    public void dispose(GLAutoDrawable arg0) {
+        // TODO Auto-generated method stub
+    }
+}

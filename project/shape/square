@@ -1,0 +1,11 @@
+
+
+
+
+                        gl.glColor3f(1.0f, 1.0f, 1.0f);
+                        gl.glBegin(GL.GL_QUADS);
+                        gl.glVertex2i ( 00,300);
+                        gl.glVertex2i ( 900,300);
+                        gl.glVertex2i ( 900,600);
+                        gl.glVertex2i ( 00,600);
+                        gl.glEnd();

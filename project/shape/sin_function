@@ -1,0 +1,10 @@
+
+
+
+        gl.glColor3f(1.0f,0f,0f);
+        gl.glBegin(GL.GL_LINE_STRIP);
+        for (double f2=0;f2<=1600;f2+=1){
+           int y=(int)((30*Math.sin(f2/35))+200);
+            gl.glVertex2d(f2,y);
+        }
+        gl.glEnd();

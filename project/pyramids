@@ -1,0 +1,44 @@
+//  TRIANGLES /_\
+gl.glColor3f(1.0f, 9.0f, 0.0f);
+        gl.glBegin(GL.GL_TRIANGLES);
+        gl.glVertex2i ( 900,00);
+        gl.glVertex2i ( 750,450);
+        gl.glVertex2i ( 550,0);
+        gl.glEnd();
+
+        gl.glColor3f(1.0f, 0.80f, 0.0f);
+        gl.glBegin(GL.GL_TRIANGLES);
+        gl.glVertex2i ( 600,00);
+        gl.glVertex2i ( 450,500);
+        gl.glVertex2i ( 250,0);
+        gl.glEnd();
+
+        gl.glColor3f(1.0f, 0.70f, 0.0f);
+        gl.glBegin(GL.GL_TRIANGLES);
+        gl.glVertex2i ( 350,00);
+        gl.glVertex2i ( 150,550);
+        gl.glVertex2i ( 0,0);
+        gl.glEnd();
+
+
+        // it is circle
+        gl.glColor3f(1.0f, .60f, 0.0f);
+        double radius=150;
+        double ONE_DEGREE=(Math.PI/180);
+        double THREE_SIXTY=2*Math.PI;
+        gl.glBegin(GL.GL_POLYGON);
+        for (double a=0;a<THREE_SIXTY;a+=ONE_DEGREE){
+            int x=(int)(radius*Math.cos(a))+130;
+            int y=(int)(radius*Math.sin(a))+1400;
+            gl.glVertex2d(x,y);
+        }
+        gl.glEnd();
+
+
+
+        gl.glColor3f(01.0f,0.0f,0.0f);
+        gl.glBegin(GL.GL_POINTS);
+        gl.glVertex2i ( 700,800);
+        gl.glPointSize(202.0f);
+        gl.glEnd();
+

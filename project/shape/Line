@@ -1,0 +1,149 @@
+ gl.glOrtho(-200, 200, -200, 200, -1.0, 1.0);
+//            }
+//            double D=0;
+//            double x=0;
+//            int y=0;
+//            double Xspeed=1.33;
+//            int Yspeed=3;
+//            int windowWidth = 400;
+//            int windowHeight = 400;
+//            int circleRadius = 55;
+//
+//                gl.glLineWidth(1.0f);
+//                gl.glBegin(GL.GL_LINES);
+//                for (int y = -200; y <=200 ; y+=10) {
+//                    gl.glVertex2i(-200, y);
+//                    gl.glVertex2i(200, y);
+//                }
+//                for (int x = -250; x <= 250 ; x+=10) {
+//                    gl.glVertex2i(x, -200);
+//                    gl.glVertex2i(x, 200);
+//                }
+//                gl.glEnd();
+//                gl.glColor3f(15/255f, 58/255f, 108/255f);
+//                gl.glLineWidth(5.0f);
+//                gl.glBegin(GL.GL_LINES);
+//                gl.glVertex2i(-200, 0);
+//                gl.glVertex2i(200, 0);
+//                gl.glVertex2i(0, 200);
+//                gl.glVertex2i(0, -200);
+//                gl.glEnd();
+//                gl.glPushMatrix();
+//
+//                gl.glTranslated(x+=Xspeed, y=y+Yspeed, 0);
+//                gl.glRotated(D+=0.1, 0,0 , 1);
+//
+//
+//                DrawTriangle(gl);
+//                if(x > (windowWidth / 2 - circleRadius) || x < -(windowWidth / 2 - circleRadius)) {
+//                    Xspeed = -Xspeed;
+//                }
+//
+//                if(y > (windowHeight / 2 - circleRadius) || y < -(windowHeight / 2 - circleRadius)) {
+//                    Yspeed = -Yspeed;
+//                }
+//                gl.glPopMatrix();
+//            }
+//            @Override
+//            public void reshape(GLAutoDrawable glAutoDrawable, int i, int i1, int i2, int i3) {
+//
+//            }
+//
+//            @Override
+//            public void displayChanged(GLAutoDrawable glAutoDrawable, boolean b, boolean b1) {
+//
+//            }
+//            public static void DrawTriangle(GL gl) {
+//                gl.glColor3f(1, 217/255f, 1/255f);
+//                double radius0=55;
+//                double ONE_DEGREE=(Math.PI/180);
+//                double THREE_SIXTY=2*Math.PI;
+//                gl.glPointSize(2.0f);
+//                gl.glBegin(GL.GL_POINTS);
+//                for (double a0=0;a0<THREE_SIXTY;a0+=ONE_DEGREE){
+//                    int x=(int)(radius0*Math.cos(a0));
+//                    int y=(int)(radius0*Math.sin(a0));
+//                    gl.glVertex2d(x,y);
+//                }
+//                gl.glEnd();
+//                gl.glBegin(GL.GL_TRIANGLES);
+//                gl.glVertex2i((int) (-95*Math.cos(45)),(int) (-55*Math.cos(45)) );
+//                gl.glVertex2i((int) (95*Math.cos(45)),(int) (-55*Math.cos(45)) );
+//                gl.glVertex2i(0,55 );
+//                gl.glEnd();
+//            }
+//        }
+
+
+import javax.media.opengl.GL;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLEventListener;
+
+
+
+public class RotatingTriangle implements GLEventListener {
+    @Override
+    public void init(GLAutoDrawable glAutoDrawable) {
+
+        GL gl = glAutoDrawable.getGL();
+
+        gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        gl.glMatrixMode(GL.GL_PROJECTION);
+        gl.glLoadIdentity();
+        gl.glOrtho(-200, 200, -200, 200, -1.0, 1.0);
+    }
+    double D=0;
+    double x=0;
+    int y=0;
+    double Xspeed=1.33;
+    int Yspeed=3;
+    int windowWidth = 400;
+    int windowHeight = 400;
+    int circleRadius = 55;
+    @Override
+    public void display(GLAutoDrawable glAutoDrawable) {
+
+
+
+        gl.glPushMatrix();
+        gl.glTranslated(x+=Xspeed, y=y+Yspeed, 0);
+        gl.glRotated(D+=0.1, 0,0 , 1);
+        DrawTriangle(gl);
+        if(x > (windowWidth / 2 - circleRadius) || x < -(windowWidth / 2 - circleRadius)) {
+            Xspeed = -Xspeed;
+        }
+
+        if(y > (windowHeight / 2 - circleRadius) || y < -(windowHeight / 2 - circleRadius)) {
+            Yspeed = -Yspeed;
+        }
+        gl.glPopMatrix();
+    }
+    @Override
+    public void reshape(GLAutoDrawable glAutoDrawable, int i, int i1, int i2, int i3) {
+
+    }
+
+    @Override
+    public void displayChanged(GLAutoDrawable glAutoDrawable, boolean b, boolean b1) {
+
+    }
+    public static void DrawTriangle(GL gl) {
+        gl.glColor3f(1, 217/255f, 1/255f);
+        double radius0=55;
+        double ONE_DEGREE=(Math.PI/180);
+        double THREE_SIXTY=2*Math.PI;
+        gl.glPointSize(2.0f);
+        gl.glBegin(GL.GL_POINTS);
+        for (double a0=0;a0<THREE_SIXTY;a0+=ONE_DEGREE){
+            int x=(int)(radius0*Math.cos(a0));
+            int y=(int)(radius0*Math.sin(a0));
+            gl.glVertex2d(x,y);
+        }
+        gl.glEnd();
+        gl.glBegin(GL.GL_TRIANGLES);
+        gl.glVertex2i((int) (-95*Math.cos(45)),(int) (-55*Math.cos(45)) );
+        gl.glVertex2i((int) (95*Math.cos(45)),(int) (-55*Math.cos(45)) );
+        gl.glVertex2i(0,55 );
+        gl.glEnd();
+    }
+}

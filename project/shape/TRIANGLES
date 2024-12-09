@@ -1,0 +1,7 @@
+/  TRIANGLES /_\
+        gl.glColor3f(1.0f, 9.0f, 0.0f);
+        gl.glBegin(GL.GL_TRIANGLES);
+        gl.glVertex2i ( 900,00);
+        gl.glVertex2i ( 750,450);
+        gl.glVertex2i ( 550,0);
+        gl.glEnd();

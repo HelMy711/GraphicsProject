@@ -1,0 +1,32 @@
+        gl.glColor3f(0.0f, 0.5f, 0.0f);
+        gl.glBegin(GL.GL_QUADS);
+        gl.glVertex2i ( 00,00);
+        gl.glVertex2i ( 900,00);
+        gl.glVertex2i ( 900,300);
+        gl.glVertex2i ( 00,300);
+        gl.glEnd();
+
+        gl.glColor3f(1.0f, 1.0f, 1.0f);
+        gl.glBegin(GL.GL_QUADS);
+        gl.glVertex2i ( 00,300);
+        gl.glVertex2i ( 900,300);
+        gl.glVertex2i ( 900,600);
+        gl.glVertex2i ( 00,600);
+        gl.glEnd();
+
+
+        gl.glColor3f(0.0f, 0.0f, 0.0f);
+        gl.glBegin(GL.GL_QUADS);
+        gl.glVertex2i ( 00,600);
+        gl.glVertex2i ( 900,600);
+        gl.glVertex2i ( 900,900);
+        gl.glVertex2i ( 000,900);
+        gl.glEnd();
+
+        gl.glColor3f(1.0f, 0.0f, 0.0f);
+
+        gl.glBegin(GL.GL_TRIANGLES);
+        gl.glVertex2i ( 00,00);
+        gl.glVertex2i ( 00,900);
+        gl.glVertex2i ( 300,450);
+        gl.glEnd();

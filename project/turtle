@@ -1,0 +1,249 @@
+import javax.media.opengl.GL;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLEventListener;
+class turtle11 implements GLEventListener {
+    public static void main(String[] args) {
+        new turtle11();
+    }
+    @Override
+    public void init(GLAutoDrawable drawable) {
+        GL gl = drawable.getGL();
+        // color of the background
+        gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        gl.glViewport(0, 0, 1000, 1000);
+        gl.glMatrixMode(GL.GL_PROJECTION);
+        gl.glLoadIdentity();
+
+        gl.glOrtho(0.0, 1000.0, 0.0, 1000.0, -1.0, 1.0);
+    }
+    @Override
+    public void display(GLAutoDrawable drawable) {
+        GL gl = drawable.getGL();
+        gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+
+        // Draw a circle
+
+
+        gl.glColor3f(0.40f,0.70f,0.40f);
+        double head=80;
+        double ONE_DEGREE=(Math.PI/180);
+        double THREE_SIXTY=2*Math.PI;
+        gl.glBegin(GL.GL_POLYGON);
+        for (double h=0;h<THREE_SIXTY;h+=ONE_DEGREE){
+            int x=(int)(head*Math.cos(h))+500;
+            int y=(int)(head*Math.sin(h))+730;
+            gl.glVertex2d(x,y);
+        }
+        gl.glEnd();
+
+ //الذيل
+        gl.glColor3f(.340f, .80f, 0.340f);
+        gl.glBegin(GL.GL_TRIANGLES);
+        gl.glVertex2i ( 500,200);
+        gl.glVertex2i ( 580,320);
+        gl.glVertex2i ( 420,320);
+        gl.glEnd();
+
+//eye
+        gl.glColor3f(0.0f, .0f, 0.0f);
+        double eye_r=20;
+        gl.glBegin(GL.GL_POLYGON);
+        for (double e=0;e<THREE_SIXTY;e+=ONE_DEGREE){
+            int x=(int)(eye_r*Math.cos(e))+540;
+            int y=(int)(eye_r*Math.sin(e))+750;
+            gl.glVertex2d(x,y);
+        }
+        gl.glEnd();
+
+        gl.glColor3f(0.0f, .0f, 0.0f);
+        double eye_l=20;
+        gl.glBegin(GL.GL_POLYGON);
+        for (double e1=0;e1<THREE_SIXTY;e1+=ONE_DEGREE){
+            int x=(int)(eye_l*Math.cos(e1))+460;
+            int y=(int)(eye_l*Math.sin(e1))+750;
+            gl.glVertex2d(x,y);
+        }
+        gl.glEnd();
+
+
+        gl.glColor3f(0.0f, .20f, 0.0f);
+        double radius=200;
+        gl.glBegin(GL.GL_POLYGON);
+        for (double a=0;a<THREE_SIXTY;a+=ONE_DEGREE){
+            int x=(int)(radius*Math.cos(a))+500;
+            int y=(int)(radius*Math.sin(a))+500;
+            gl.glVertex2d(x,y);
+        }
+        gl.glEnd();
+
+
+
+
+        gl.glColor3f(.340f, .80f, 0.340f);
+        double radius1=190;
+        gl.glBegin(GL.GL_POLYGON);
+        for (double a1=0;a1<THREE_SIXTY;a1+=ONE_DEGREE){
+            int x=(int)(radius1*Math.cos(a1))+500;
+            int y=(int)(radius1*Math.sin(a1))+500;
+            gl.glVertex2d(x,y);
+        }
+        gl.glEnd();
+
+        gl.glColor3f(.390f, .60f, 0.390f);
+        double radius2=170;
+        gl.glBegin(GL.GL_POLYGON);
+        for (double a2=0;a2<THREE_SIXTY;a2+=ONE_DEGREE){
+            int x=(int)(radius2*Math.cos(a2))+500;
+            int y=(int)(radius2*Math.sin(a2))+500;
+            gl.glVertex2d(x,y);
+        }
+        gl.glEnd();
+
+
+        gl.glColor3f(.22f, .90f, 0.22f);
+        double radius4=120;
+        gl.glBegin(GL.GL_POLYGON);
+        for (double a4=0;a4<THREE_SIXTY;a4+=ONE_DEGREE){
+            int x=(int)(radius4*Math.cos(a4))+500;
+            int y=(int)(radius4*Math.sin(a4))+500;
+            gl.glVertex2d(x,y);
+        }
+        gl.glEnd();
+//leg 1
+        gl.glSecondaryColor3i(129,278,127);
+        double radius5=60;
+        gl.glBegin(GL.GL_POLYGON);
+        for (double a5=0;a5 <THREE_SIXTY;a5+=ONE_DEGREE){
+            int x=(int)(radius5*Math.cos(a5))+300;
+            int y=(int)(radius5*Math.sin(a5))+600;
+            gl.glVertex2d(x,y);
+        }
+        gl.glEnd();
+//leg 2
+
+        gl.glSecondaryColor3i(99,278,127);
+        double radius6=60;
+        gl.glBegin(GL.GL_POLYGON);
+        for (double a6=0;a6 <THREE_SIXTY;a6+=ONE_DEGREE){
+            int x=(int)(radius6*Math.cos(a6))+330;
+            int y=(int)(radius6*Math.sin(a6))+350;
+            gl.glVertex2d(x,y);
+        }
+        gl.glEnd();
+//leg 3
+
+        gl.glSecondaryColor3i(99,278,127);
+        double radius7=60;
+        gl.glBegin(GL.GL_POLYGON);
+        for (double a7=0;a7 <THREE_SIXTY;a7+=ONE_DEGREE){
+            int x=(int)(radius7*Math.cos(a7))+640;
+            int y=(int)(radius7*Math.sin(a7))+330;
+            gl.glVertex2d(x,y);
+        }
+        gl.glEnd();
+//leg 4
+        gl.glSecondaryColor3i(99,278,127);
+        double radius8=60;
+        gl.glBegin(GL.GL_POLYGON);
+        for (double a8=0;a8 <THREE_SIXTY;a8+=ONE_DEGREE){
+            int x=(int)(radius8*Math.cos(a8))+680;
+            int y=(int)(radius8*Math.sin(a8))+600;
+            gl.glVertex2d(x,y);
+        }
+        gl.glEnd();
+  //finger
+        gl.glColor3f(0.40f,0.70f,0.40f);
+        double fenger1=20;
+        gl.glBegin(GL.GL_POLYGON);
+        for (double f1=0;f1<THREE_SIXTY;f1+=ONE_DEGREE){
+            int x=(int)(fenger1*Math.cos(f1))+720;
+            int y=(int)(fenger1*Math.sin(f1))+630;
+            gl.glVertex2d(x,y);
+        }
+        gl.glEnd();
+
+        gl.glColor3f(0.40f,0.70f,0.40f);
+        double fenger2=20;
+        gl.glBegin(GL.GL_POLYGON);
+        for (double f2=0;f2<THREE_SIXTY;f2+=ONE_DEGREE){
+            int x=(int)(fenger2*Math.cos(f2))+270;
+            int y=(int)(fenger2*Math.sin(f2))+630;
+            gl.glVertex2d(x,y);
+        }
+        gl.glEnd();
+        gl.glColor3f(0.40f,0.70f,0.40f);
+        double fenger3=20;
+        gl.glBegin(GL.GL_POLYGON);
+        for (double f3=0;f3<THREE_SIXTY;f3+=ONE_DEGREE){
+            int x=(int)(fenger3*Math.cos(f3))+680;
+            int y=(int)(fenger3*Math.sin(f3))+300;
+            gl.glVertex2d(x,y);
+        }
+        gl.glEnd();
+
+        gl.glColor3f(0.40f,0.70f,0.40f);
+        double fenger4=20;
+        gl.glBegin(GL.GL_POLYGON);
+        for (double f4=0;f4<THREE_SIXTY;f4+=ONE_DEGREE){
+            int x=(int)(fenger4*Math.cos(f4))+290;
+            int y=(int)(fenger4*Math.sin(f4))+330;
+            gl.glVertex2d(x,y);
+        }
+        gl.glEnd();
+
+    }
+
+    @Override
+    public void reshape(GLAutoDrawable glAutoDrawable, int i, int i1, int i2, int i3) {
+
+    }
+
+    @Override
+    public void displayChanged(
+            GLAutoDrawable drawable,
+            boolean modeChanged,
+            boolean deviceChanged
+    ) {}
+
+
+    public void dispose(GLAutoDrawable arg0) {
+        // TODO Auto-generated method stub
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+import java.awt.*;
+import javax.swing.*;
+import javax.media.opengl.*;
+public class turtle_run extends JFrame{
+    public static void main(String[] args) {
+        new turtle_run();
+    }
+    public turtle_run(){
+        super("Simple JOGL Application");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        GLCanvas glcanvas = new GLCanvas();
+        glcanvas.addGLEventListener(new turtle11());
+        add(glcanvas, BorderLayout.CENTER);
+        setSize(900, 900);
+        setLocationRelativeTo(this);
+        setVisible(true);
+
+
+    }
+
+
+}

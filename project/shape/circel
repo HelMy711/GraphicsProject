@@ -1,0 +1,13 @@
+
+ double ONE_DEGREE=(Math.PI/180);
+        double THREE_SIXTY=2*Math.PI;
+
+        gl.glColor3f(1.0f, .60f, 0.0f);
+        double radius0=150;
+        gl.glBegin(GL.GL_POLYGON);
+        for (double a0=0;a0<THREE_SIXTY;a0+=ONE_DEGREE){
+            int x=(int)(radius0*Math.cos(a0))+200;
+            int y=(int)(radius0*Math.sin(a0))+750;
+            gl.glVertex2d(x,y);
+        }
+         gl.glEnd();

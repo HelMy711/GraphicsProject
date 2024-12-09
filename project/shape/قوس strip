@@ -1,0 +1,9 @@
+ gl.glColor3f(0.0f,0.0f,0.0f);  //لونه
+        gl.glLineWidth(5f);        //تخن الخط
+        gl.glBegin(GL.GL_LINE_STRIP);       /ابدا رسم
+        for (int i = 180; i <=360;i++) {            //اتحكم في الزاويه ع حسب الربع
+            double angle =i*Math.PI/180;
+            gl.glVertex2f(500+20*(float) Math.cos(angle), //مكان محور الصادات =700// 500=مكان محور السينات //
+            700+20*(float) Math.sin(angle));
+        }
+        gl.glEnd();

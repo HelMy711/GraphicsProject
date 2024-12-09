@@ -1,0 +1,15 @@
+
+
+
+            gl.glColor3f(1.0f, 1.0f, 01.0f);
+            double radius=250;
+            gl.glBegin(GL.GL_LINES);
+            for (double a=0;a<THREE_SIXTY;a+=30*ONE_DEGREE){
+                gl.glLineWidth(5f);
+                gl.glVertex2d(1250,850);
+                int x=(int)(radius*Math.cos(a))+1250;
+                int y=(int)(radius*Math.sin(a))+870;
+                gl.glVertex2d(x,y);
+
+            }
+            gl.glEnd();

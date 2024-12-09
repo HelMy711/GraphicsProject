@@ -1,0 +1,9 @@
+
+
+
+
+        gl.glColor3f(1.0f,0.0f,1.0f);
+        gl.glPointSize(80);
+        gl.glBegin(GL.GL_POINTS);
+        gl.glVertex2d(80, 48);
+        gl.glEnd();
