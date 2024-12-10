@@ -5,6 +5,8 @@ import com.sun.opengl.util.FPSAnimator;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import javax.media.opengl.*;
 import javax.swing.*;
 
@@ -40,7 +42,10 @@ public class Run extends JFrame {
         AnimListener listener = new AirHockey();
         glcanvas = new GLCanvas();
         glcanvas.addGLEventListener(listener);
+        glcanvas.addGLEventListener(listener);
         glcanvas.addKeyListener(listener);
+//        glcanvas.addMouseListener((MouseListener) listener);
+        glcanvas.addMouseMotionListener((MouseMotionListener) listener);
         getContentPane().add(glcanvas, BorderLayout.CENTER);
 
         // إعداد المشغل

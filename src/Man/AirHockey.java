@@ -13,13 +13,19 @@ import java.io.IOException;
 public class AirHockey extends AnimListener implements MouseMotionListener {
     int maxWidth = 100;
     int maxHeight = 100;
-    String textureNames[] = {
+    double xball=45;
+    double yball=45;
+    double xred=10;
+    double yred=45;
+    double xblue=80;
+    double yblue=45;
+    boolean gamerun1p=true;
+
+    String[] textureNames = {
             "bluehockeystick.png", //0
             "field.png", //1
-            "Group 3.png",//2
-            "Group 4.png", //3
-            "puck.png", //4
-            "redhockeystick.png"  //5
+            "puck.png", //2
+            "redhockeystick.png"  //3
     };
     TextureReader.Texture[] texture = new TextureReader.Texture[textureNames.length];
     int []textures = new int[textureNames.length];
@@ -42,20 +48,30 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
         }
     }
 
+
     @Override
     public void display(GLAutoDrawable gld) {
         GL gl = gld.getGL();
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
         gl.glLoadIdentity();
-        DrawBackground(gl);
+        if (gamerun1p){
+            run1p(gl);
+        }
+
     }
-    public void DrawSprite(GL gl, int x, int y, int index, float scale) {
+    void run1p(GL gl){
+        DrawBackground(gl);
+        DrawSprite(gl,xblue, yblue, 0, 1);
+        DrawSprite(gl,xred, yred, 3, 1);
+        DrawSprite(gl,xball, yball,2,1);
+    }
+    public void DrawSprite(GL gl, double x, double y, int index, float scale) {
         gl.glEnable(GL.GL_BLEND);
         gl.glBindTexture(GL.GL_TEXTURE_2D, textures[index]);
 
         gl.glPushMatrix();
         gl.glTranslated(x / (maxWidth / 2.0) - 0.9, y / (maxHeight / 2.0) - 0.9, 0);
-        gl.glScaled(0.1 * scale, 0.1 * scale, 1);
+        gl.glScaled(0.08 * scale, 0.1 * scale, 1);
 
         gl.glBegin(GL.GL_QUADS);
         gl.glTexCoord2f(0.0f, 0.0f);
@@ -88,7 +104,6 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
         gl.glTexCoord2f(0.0f, 1.0f);
         gl.glVertex3f(-1.0f, 1.0f, -1.0f);
         gl.glEnd();
-
         gl.glPopMatrix();
         gl.glDisable(GL.GL_BLEND);
     }
@@ -143,13 +158,16 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-
+        System.out.println(e.getX() + " " + e.getY());
+        System.out.println(convertX(e.getX(),e.getComponent().getWidth()) + " " + convertY(e.getY(),e.getComponent().getHeight()));
+        xred = convertX(e.getX(), e.getComponent().getWidth())-5;
+        yred = convertY(e.getY(), e.getComponent().getHeight())-5;
     }
     private double convertX(double x, double width) {
-        return (x / width) * 500;
+        return (x / width) * 100;
     }
 
     private double convertY(double y, double height) {
-        return (1 - y / height) * 300;
+        return (1 - y / height) * 100;
     }
 }
