@@ -13,18 +13,18 @@ import java.io.IOException;
 public class AirHockey extends AnimListener implements MouseMotionListener {
     int maxWidth = 100;
     int maxHeight = 100;
-    double xball=45;
-    double yball=45;
-    double xred=10;
-    double yred=45;
-    double xblue=80;
-    double yblue=45;
-    boolean gamerun1p=true;
-    int t1=4;
-    int t2=4;
-    int t3=4;
-    int t4=4;
-    int time=120;
+    double xball = 45;
+    double yball = 45;
+    double xred = 10;
+    double yred = 45;
+    double xblue = 80;
+    double yblue = 45;
+    boolean gamerun1p = true;
+    int t1 = 4;
+    int t2 = 4;
+    int t3 = 4;
+    int t4 = 4;
+    int time = 120;
 
     String[] textureNames = {
             "bluehockeystick.png", //0
@@ -33,10 +33,11 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
             "redhockeystick.png" //3
 
 
-            ,"0.png","1 .png","2 .png","3.png","4.png","5.png","6.png","7.png","8.png","9.png","colon.png","colon1.png","colon2.png"
+            , "0.png", "1 .png", "2 .png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png", "colon.png", "colon1.png", "colon2.png"
     };
     TextureReader.Texture[] texture = new TextureReader.Texture[textureNames.length];
-    int []textures = new int[textureNames.length];
+    int[] textures = new int[textureNames.length];
+
     @Override
     public void init(GLAutoDrawable gld) {
         GL gl = gld.getGL();
@@ -61,30 +62,61 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
 
     @Override
     public void display(GLAutoDrawable gld) {
-      time--;
-      calctime();
+        time--;
+        calctime();
         GL gl = gld.getGL();
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
         gl.glLoadIdentity();
-        if (gamerun1p){
+        if (gamerun1p) {
             run1p(gl);
         }
-        Drawnum(gl,53,91,t3, 0.7F);
-        Drawnum(gl,60,91,t4, 0.7F);
-        Drawnum(gl,46,91,16,0.6F);
-        Drawnum(gl,39,91,t2, 0.7F);
-        Drawnum(gl,32,91,t1, 0.7F);
-        Drawnum(gl,20,-1,4,0.7F);
-        Drawnum(gl,27,-1,4,0.7F);
-        Drawnum(gl,70,-1,4,0.7F);
-        Drawnum(gl,77,-1,4,0.7F);
+//        if(xred>40){
+//            xred=40;
+//        }
+//        if (xblue<40){
+//            xblue=45;
+//        }
+
+        Drawnum(gl, 53, 91, t3, 0.7F);
+        Drawnum(gl, 60, 91, t4, 0.7F);
+        Drawnum(gl, 46, 91, 16, 0.6F);
+        Drawnum(gl, 39, 91, t2, 0.7F);
+        Drawnum(gl, 32, 91, t1, 0.7F);
+        Drawnum(gl, 20, -1, 4, 0.7F);
+        Drawnum(gl, 27, -1, 4, 0.7F);
+        Drawnum(gl, 70, -1, 4, 0.7F);
+        Drawnum(gl, 77, -1, 4, 0.7F);
     }
-    void run1p(GL gl){
+
+    void run1p(GL gl) {
         DrawBackground(gl);
-        DrawSprite(gl,xblue, yblue, 0, 1);
-        DrawSprite(gl,xred, yred, 3, 1);
-        DrawSprite(gl,xball, yball,2,1);
+        DrawSprite(gl, xblue, yblue, 0, 1);
+        DrawSprite(gl, xred, yred, 3, 1);
+        DrawSprite(gl, xball, yball, 2, 1);
     }
+    public void calctime() {
+        if (time <= 0) {
+            time = 120;
+            t4++;
+
+            if (t4 == 14) {
+                t3++;
+                t4 = 4;
+
+
+            }
+            if (t3 == 10) {
+                t2++;
+                t3 = 4;
+            }
+
+            if (t2 == 14) {
+                t1++;
+                t2 = 4;
+            }
+        }
+    }
+
     public void DrawSprite(GL gl, double x, double y, int index, float scale) {
         gl.glEnable(GL.GL_BLEND);
         gl.glBindTexture(GL.GL_TEXTURE_2D, textures[index]);
@@ -161,15 +193,37 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
 
     }
 
+    // إضافة مصفوفة لتتبع المفاتيح المضغوطة
+    private boolean[] keys = new boolean[256];
+
+    public void handleKeyPressed() {
+        if (keys[KeyEvent.VK_UP] && yblue < maxHeight - 20) {
+            yblue += 5;
+        }
+        if (keys[KeyEvent.VK_DOWN] && yblue > 12) {
+            yblue -= 5;
+        }
+        if (keys[KeyEvent.VK_LEFT] && xblue > (maxWidth / 2) - 5) {
+            xblue -= 5;
+        }
+        if (keys[KeyEvent.VK_RIGHT] && xblue < maxWidth - 15) {
+            xblue += 5;
+        }
+    }
+
     @Override
     public void keyPressed(KeyEvent e) {
-
+        // تعيين المفتاح المضغوط كـ true
+        keys[e.getKeyCode()] = true;
+        handleKeyPressed();
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-
+        // تعيين المفتاح الذي تم تحريره كـ false
+        keys[e.getKeyCode()] = false;
     }
+
 
     @Override
     public void mouseDragged(MouseEvent e) {
@@ -178,11 +232,18 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        System.out.println(e.getX() + " " + e.getY());
-        System.out.println(convertX(e.getX(),e.getComponent().getWidth()) + " " + convertY(e.getY(),e.getComponent().getHeight()));
-        xred = convertX(e.getX(), e.getComponent().getWidth())-5;
-        yred = convertY(e.getY(), e.getComponent().getHeight())-5;
+        double tempXred = convertX(e.getX(), e.getComponent().getWidth()) - 5;
+        double tempYred = convertY(e.getY(), e.getComponent().getHeight()) - 5;
+
+        if (tempXred > 2 && tempXred < maxWidth / 2.20) {
+            xred = tempXred;
+        }
+
+        if (tempYred > 6 && tempYred < maxHeight - 16) {
+            yred = tempYred;
+        }
     }
+
     private double convertX(double x, double width) {
         return (x / width) * 100;
     }
@@ -191,26 +252,5 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
         return (1 - y / height) * 100;
     }
 
-public void calctime(){
-    if (time<=0){
-time=120;
-t4++;
 
-if (t4==14){
-    t3++;
-    t4=4;
-
-
-}
-if (t3==10){
-    t2++;
-    t3=4;
-}
-
- if (t2==14){
-     t1++;
-     t2=4;
- }
-    }
-}
 }
