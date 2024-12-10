@@ -13,6 +13,16 @@ import java.io.IOException;
 public class AirHockey extends AnimListener implements MouseMotionListener {
     int maxWidth = 100;
     int maxHeight = 100;
+    int xPuck = 45;
+    int yPuck = 45;
+
+    int xPlayer1 = 80;
+    int yPlayer1 = 45;
+
+    int xPlayer2 = 10;
+    int yPlayer2 = 45;
+
+
     String textureNames[] = {
             "bluehockeystick.png", //0
             "field.png", //1
@@ -48,6 +58,11 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
         gl.glLoadIdentity();
         DrawBackground(gl);
+//        handleKeyPress();
+
+        DrawSprite(gl, xPlayer1, yPlayer1, 2, 1);
+        DrawSprite(gl, xPlayer2, yPlayer2, 3, 1);
+        DrawSprite(gl, xPuck, yPuck, 4, 1);
     }
     public void DrawSprite(GL gl, int x, int y, int index, float scale) {
         gl.glEnable(GL.GL_BLEND);
@@ -55,7 +70,7 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
 
         gl.glPushMatrix();
         gl.glTranslated(x / (maxWidth / 2.0) - 0.9, y / (maxHeight / 2.0) - 0.9, 0);
-        gl.glScaled(0.1 * scale, 0.1 * scale, 1);
+        gl.glScaled(0.1 * scale, 0.15 * scale, 1);
 
         gl.glBegin(GL.GL_QUADS);
         gl.glTexCoord2f(0.0f, 0.0f);
