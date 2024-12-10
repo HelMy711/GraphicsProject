@@ -20,12 +20,20 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
     double xblue=80;
     double yblue=45;
     boolean gamerun1p=true;
+    int t1=4;
+    int t2=4;
+    int t3=4;
+    int t4=4;
+    int time=120;
 
     String[] textureNames = {
             "bluehockeystick.png", //0
             "field.png", //1
             "puck.png", //2
-            "redhockeystick.png"  //3
+            "redhockeystick.png" //3
+
+
+            ,"0.png","1 .png","2 .png","3.png","4.png","5.png","6.png","7.png","8.png","9.png","colon.png","colon1.png","colon2.png"
     };
     TextureReader.Texture[] texture = new TextureReader.Texture[textureNames.length];
     int []textures = new int[textureNames.length];
@@ -43,6 +51,8 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
                 new GLU().gluBuild2DMipmaps(GL.GL_TEXTURE_2D, GL.GL_RGBA, texture[i].getWidth(), texture[i].getHeight(),
                         GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, texture[i].getPixels());
             } catch (IOException e) {
+                System.out.println(e);
+
                 e.printStackTrace();
             }
         }
@@ -51,13 +61,23 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
 
     @Override
     public void display(GLAutoDrawable gld) {
+      time--;
+      calctime();
         GL gl = gld.getGL();
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
         gl.glLoadIdentity();
         if (gamerun1p){
             run1p(gl);
         }
-
+        Drawnum(gl,53,91,t3, 0.7F);
+        Drawnum(gl,60,91,t4, 0.7F);
+        Drawnum(gl,46,91,16,0.6F);
+        Drawnum(gl,39,91,t2, 0.7F);
+        Drawnum(gl,32,91,t1, 0.7F);
+        Drawnum(gl,20,-1,4,0.7F);
+        Drawnum(gl,27,-1,4,0.7F);
+        Drawnum(gl,70,-1,4,0.7F);
+        Drawnum(gl,77,-1,4,0.7F);
     }
     void run1p(GL gl){
         DrawBackground(gl);
@@ -88,7 +108,7 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
         gl.glDisable(GL.GL_BLEND);
     }
 
-    public void DrawSprite1(GL gl, int x, int y, int index, float scale) {
+    public void Drawnum(GL gl, int x, int y, int index, float scale) {
         gl.glEnable(GL.GL_BLEND);
         gl.glBindTexture(GL.GL_TEXTURE_2D, textures[index]);
         gl.glPushMatrix();
@@ -170,4 +190,27 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
     private double convertY(double y, double height) {
         return (1 - y / height) * 100;
     }
+
+public void calctime(){
+    if (time<=0){
+time=120;
+t4++;
+
+if (t4==14){
+    t3++;
+    t4=4;
+
+
+}
+if (t3==10){
+    t2++;
+    t3=4;
+}
+
+ if (t2==14){
+     t1++;
+     t2=4;
+ }
+    }
+}
 }
