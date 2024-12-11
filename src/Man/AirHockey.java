@@ -1,7 +1,6 @@
 package Man;
 
 import Texture.TextureReader;
-
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
@@ -13,6 +12,11 @@ import java.io.IOException;
 public class AirHockey extends AnimListener implements MouseMotionListener {
     int maxWidth = 100;
     int maxHeight = 100;
+
+    double speedx=.3;  //speed of the ball
+    double speedy=.2;
+    boolean ballStationary = true;
+
     double xball = 45;
     double yball = 45;
     double xred = 10;
@@ -31,8 +35,6 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
             "field.png", //1
             "puck.png", //2
             "redhockeystick.png" //3
-
-
             , "0.png", "1 .png", "2 .png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png", "colon.png", "colon1.png", "colon2.png"
     };
     TextureReader.Texture[] texture = new TextureReader.Texture[textureNames.length];
@@ -67,15 +69,19 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
         GL gl = gld.getGL();
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
         gl.glLoadIdentity();
+
         if (gamerun1p) {
             run1p(gl);
         }
-//        if(xred>40){
-//            xred=40;
-//        }
-//        if (xblue<40){
-//            xblue=45;
-//        }
+        if (!ballStationary) {
+            xball += speedx;
+            yball += speedy;
+        }
+
+        //الحته دي يسطا بتاع التصادم
+        xball += speedx;
+        yball += speedy;
+        checkCollision();
 
         Drawnum(gl, 53, 91, t3, 0.7F);
         Drawnum(gl, 60, 91, t4, 0.7F);
@@ -90,10 +96,12 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
 
     void run1p(GL gl) {
         DrawBackground(gl);
+
         DrawSprite(gl, xblue, yblue, 0, 1);
         DrawSprite(gl, xred, yred, 3, 1);
         DrawSprite(gl, xball, yball, 2, 1);
     }
+
     public void calctime() {
         if (time <= 0) {
             time = 120;
@@ -102,14 +110,12 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
             if (t4 == 14) {
                 t3++;
                 t4 = 4;
-
-
             }
+
             if (t3 == 10) {
                 t2++;
                 t3 = 4;
             }
-
             if (t2 == 14) {
                 t1++;
                 t2 = 4;
@@ -178,34 +184,54 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
         gl.glDisable(GL.GL_BLEND);
     }
 
+    void checkCollision() {
+        // blue player
+        if (Math.abs(xball - xblue) < 5 && Math.abs(yball - yblue) < 10) {
+            ballStationary = false;
+            speedx = (xball - xblue) * 0.1;
+            speedy = (yball - yblue) * 0.1;
+        }
+        // red player
+        if (Math.abs(xball - xred) < 5 && Math.abs(yball - yred) < 10) {
+            ballStationary = false;
+            speedx = (xball - xred) * 0.1;
+            speedy = (yball - yred) * 0.1;
+        }
+
+        // collision with walls الحيطه يعني
+        if (xball < 2 || xball > maxWidth - 13) {
+            speedx = -speedx;
+        }
+        if (yball < 7 || yball > maxHeight - 18) {
+            speedy = -speedy;
+        }
+    }
+
     @Override
     public void reshape(GLAutoDrawable glAutoDrawable, int i, int i1, int i2, int i3) {
-
     }
 
     @Override
     public void displayChanged(GLAutoDrawable glAutoDrawable, boolean b, boolean b1) {
-
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
-
     }
-
-    // إضافة مصفوفة لتتبع المفاتيح المضغوطة
     private boolean[] keys = new boolean[256];
-
     public void handleKeyPressed() {
         if (keys[KeyEvent.VK_UP] && yblue < maxHeight - 20) {
             yblue += 5;
         }
+
         if (keys[KeyEvent.VK_DOWN] && yblue > 12) {
             yblue -= 5;
         }
+
         if (keys[KeyEvent.VK_LEFT] && xblue > (maxWidth / 2) - 5) {
             xblue -= 5;
         }
+
         if (keys[KeyEvent.VK_RIGHT] && xblue < maxWidth - 15) {
             xblue += 5;
         }
@@ -213,21 +239,18 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        // تعيين المفتاح المضغوط كـ true
         keys[e.getKeyCode()] = true;
         handleKeyPressed();
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        // تعيين المفتاح الذي تم تحريره كـ false
         keys[e.getKeyCode()] = false;
     }
 
 
     @Override
     public void mouseDragged(MouseEvent e) {
-
     }
 
     @Override

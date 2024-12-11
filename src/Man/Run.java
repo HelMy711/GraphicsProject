@@ -22,8 +22,6 @@ public class Run extends JFrame {
     public Run() {
         GLCanvas glcanvas;
         JButton startButton = new JButton("Start");
-
-        // إضافة المستمع للزر
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -48,24 +46,22 @@ public class Run extends JFrame {
 //        glcanvas.addMouseListener((MouseListener) listener);
         glcanvas.addMouseMotionListener((MouseMotionListener) listener);
         getContentPane().add(glcanvas, BorderLayout.CENTER);
+        animator = new FPSAnimator(glcanvas, 60);
 
-        // إعداد المشغل
-        animator = new FPSAnimator(glcanvas, 60); // تشغيل 60 إطارًا في الثانية
+//        JPanel panel = new JPanel();
+//        panel.add(startButton, BorderLayout.CENTER);
+//        add(panel, BorderLayout.SOUTH);
 
-        // إعداد لوحة الأزرار
-        JPanel panel = new JPanel();
-        panel.add(startButton, BorderLayout.CENTER);
-        add(panel, BorderLayout.SOUTH);
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT)); // المحاذاة لليسار
+        panel.add(startButton);  // إضافة الزر إلى اللوحة
+        add(panel, BorderLayout.SOUTH);  // إضافة اللوحة في الجزء السفلي
 
-        // إعداد الإطار
         setTitle("Air Hockey");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
         setLocationRelativeTo(null);
         setVisible(true);
         setFocusable(true);
-
-        // طلب التركيز على لوحة GLCanvas
         glcanvas.requestFocus();
     }
 }
