@@ -12,7 +12,10 @@ import java.io.IOException;
 public class AirHockey extends AnimListener implements MouseMotionListener {
     int maxWidth = 100;
     int maxHeight = 100;
-
+int s1=4;
+int s2=4;
+int s3=4;
+int s4=4;
     double speedx=.3;  //speed of the ball
     double speedy=.2;
     boolean ballStationary = true;
@@ -64,8 +67,12 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
 
     @Override
     public void display(GLAutoDrawable gld) {
+if (xball==maxWidth&&yball==maxHeight) {
+     xball=45;
+   yball=45;}
         time--;
         calctime();
+       calcscore();
         GL gl = gld.getGL();
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
         gl.glLoadIdentity();
@@ -79,19 +86,20 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
         }
 
         //الحته دي يسطا بتاع التصادم
-        xball += speedx;
-        yball += speedy;
-        checkCollision();
 
+       if (!(s2==4&&s4==4)){
+           xball += 0.5*speedx;
+        yball += 0.5*speedy;}
+        checkCollision();
         Drawnum(gl, 53, 91, t3, 0.7F);
         Drawnum(gl, 60, 91, t4, 0.7F);
         Drawnum(gl, 46, 91, 16, 0.6F);
         Drawnum(gl, 39, 91, t2, 0.7F);
         Drawnum(gl, 32, 91, t1, 0.7F);
-        Drawnum(gl, 20, -1, 4, 0.7F);
-        Drawnum(gl, 27, -1, 4, 0.7F);
-        Drawnum(gl, 70, -1, 4, 0.7F);
-        Drawnum(gl, 77, -1, 4, 0.7F);
+        Drawnum(gl, 20, -1, s1, 0.7F);
+        Drawnum(gl, 27, -1, s2, 0.7F);
+        Drawnum(gl, 70, -1, s3, 0.7F);
+        Drawnum(gl, 77, -1, s4, 0.7F);
     }
 
     void run1p(GL gl) {
@@ -102,6 +110,34 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
         DrawSprite(gl, xball, yball, 2, 1);
     }
 
+   public void calcscore(){
+       if (xball<=2&&yball>=30&&yball<=60) {
+           xball=maxWidth;
+           yball=maxHeight;
+s4++;
+if (s4==14) {
+    s4=4;
+    s3++;
+}
+
+speedx=0;
+      speedy=0;
+      }
+if (xball>=85&&yball>=30&&yball<=60) {
+    xball=maxWidth;
+    yball=maxHeight;
+    s2++;
+    if (s2==14) {
+        s2=4;
+        s1++;
+    }
+speedx=0;
+speedy=0;
+}
+
+
+
+   }
     public void calctime() {
         if (time <= 0) {
             time = 120;
@@ -121,6 +157,7 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
                 t2 = 4;
             }
         }
+
     }
 
     public void DrawSprite(GL gl, double x, double y, int index, float scale) {

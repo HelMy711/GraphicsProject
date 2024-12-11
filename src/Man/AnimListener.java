@@ -11,6 +11,7 @@ import javax.media.opengl.GLEventListener;
 
 public abstract class AnimListener implements GLEventListener, KeyListener {
  
-    protected String assetsFolderName = ".\\Assets";
+    protected String assetsFolderName = "C:\\Users\\alikh\\g\\mainProject_304\\Assets";
 //    C:\Users\alikh\g\mainProject_304\Assets abdallah pc path
+// default path .\Assets
 }
