@@ -1,16 +1,16 @@
 package Man;
 
 import Texture.TextureReader;
+import com.sun.opengl.util.j2d.TextRenderer;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.IOException;
 
-public class AirHockey extends AnimListener implements MouseMotionListener {
+public class AirHockey extends AnimListener implements MouseMotionListener, MouseListener, KeyListener {
     int maxWidth = 100;
     int maxHeight = 100;
     int s1 = 4;
@@ -29,11 +29,15 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
     double xblue = 80;
     double yblue = 45;
     boolean gamerun1p = true; /* For two players make it false */
+    boolean start = true;
     int t1 = 4;
     int t2 = 4;
     int t3 = 4;
     int t4 = 4;
     int time = 120;
+    static int page;
+
+//    TextRenderer renderer = new TextRenderer(new Font("sanaSerif", Font.BOLD, 10));
 
     String[] textureNames = {
             "bluehockeystick.png", //0
@@ -41,7 +45,7 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
             "puck.png", //2
             "redhockeystick.png" //3
             , "0.png", "1 .png", "2 .png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png", "colon.png", "colon1.png", "colon2.png",
-            "game-rules.png"
+            "LEVELS.png","game-rules.png","home1.png"
     };
     TextureReader.Texture[] texture = new TextureReader.Texture[textureNames.length];
     int[] textures = new int[textureNames.length];
@@ -67,18 +71,32 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
         }
     }
 
-
     @Override
     public void display(GLAutoDrawable gld) {
         GL gl = gld.getGL();
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
         gl.glLoadIdentity();
 
-        if (gamerun1p) {
-            run1p(gl);
-        } else
-            run2p(gl);
-        /* For two players method mouse and Keyboard */
+        switch (page){
+            case 0: // Home
+                DrawBackground0(gl);
+                break;
+            case 1: // Rules -> Help
+                DrawRules(gl);
+                break;
+            case 2: // Levels
+                DrawLevels(gl);
+                break;
+            case 3: // Game
+                if (gamerun1p) run1p(gl);
+                else run2p(gl);
+        }
+
+//        if (gamerun1p) {
+//            run1p(gl);
+//        } else
+//            run2p(gl);
+//        /* For two players method mouse and Keyboard */
     }
 
     void run2p(GL gl) {
@@ -337,6 +355,62 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
         gl.glDisable(GL.GL_BLEND);
     }
 
+    public void DrawBackground0(GL gl) {
+        gl.glEnable(GL.GL_BLEND);
+        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[textureNames.length - 1]);
+        gl.glPushMatrix();
+        gl.glBegin(GL.GL_QUADS);
+        gl.glTexCoord2f(0.0f, 0.0f);
+        gl.glVertex3f(-1.0f, -1.0f, -1.0f);
+        gl.glTexCoord2f(1.0f, 0.0f);
+        gl.glVertex3f(1.0f, -1.0f, -1.0f);
+        gl.glTexCoord2f(1.0f, 1.0f);
+        gl.glVertex3f(1.0f, 1.0f, -1.0f);
+        gl.glTexCoord2f(0.0f, 1.0f);
+        gl.glVertex3f(-1.0f, 1.0f, -1.0f);
+        gl.glEnd();
+        gl.glPopMatrix();
+        gl.glDisable(GL.GL_BLEND);
+    }
+
+    public void DrawRules(GL gl) {
+        gl.glEnable(GL.GL_BLEND);
+        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[textureNames.length - 2]);
+        gl.glPushMatrix();
+        gl.glBegin(GL.GL_QUADS);
+        gl.glTexCoord2f(0.0f, 0.0f);
+        gl.glVertex3f(-1.0f, -1.0f, -1.0f);
+        gl.glTexCoord2f(1.0f, 0.0f);
+        gl.glVertex3f(1.0f, -1.0f, -1.0f);
+        gl.glTexCoord2f(1.0f, 1.0f);
+        gl.glVertex3f(1.0f, 1.0f, -1.0f);
+        gl.glTexCoord2f(0.0f, 1.0f);
+        gl.glVertex3f(-1.0f, 1.0f, -1.0f);
+        gl.glEnd();
+        gl.glPopMatrix();
+        gl.glDisable(GL.GL_BLEND);
+    }
+
+    public void DrawLevels(GL gl) {
+        gl.glEnable(GL.GL_BLEND);
+        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[textureNames.length - 3]);
+        gl.glPushMatrix();
+        gl.glBegin(GL.GL_QUADS);
+        gl.glTexCoord2f(0.0f, 0.0f);
+        gl.glVertex3f(-1.0f, -1.0f, -1.0f);
+        gl.glTexCoord2f(1.0f, 0.0f);
+        gl.glVertex3f(1.0f, -1.0f, -1.0f);
+        gl.glTexCoord2f(1.0f, 1.0f);
+        gl.glVertex3f(1.0f, 1.0f, -1.0f);
+        gl.glTexCoord2f(0.0f, 1.0f);
+        gl.glVertex3f(-1.0f, 1.0f, -1.0f);
+        gl.glEnd();
+        gl.glPopMatrix();
+        gl.glDisable(GL.GL_BLEND);
+    }
+
+
+
     void checkCollision() {
         // blue player
         if (Math.abs(xball - xblue) < 5 && Math.abs(yball - yblue) < 10) {
@@ -395,10 +469,28 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        int key = e.getKeyCode();
+
+        //for debugging
+        System.out.println("Key pressed: " + key);
+
+        if (page == 0) {
+            if (key == KeyEvent.VK_ESCAPE) {
+                System.exit(0); // exit
+            }
+        }
+
+        if (page == 1 || page == 2) {
+            if (key == KeyEvent.VK_ESCAPE) {
+                page = 0; // home
+            }
+        }
+
         if (!gamerun1p) {
             keys[e.getKeyCode()] = true;
             handleKeyPressed();
         }
+        e.getComponent().repaint();
     }
 
     @Override
@@ -417,6 +509,8 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
     public void mouseMoved(MouseEvent e) {
         double tempXred = convertX(e.getX(), e.getComponent().getWidth()) - 5;
         double tempYred = convertY(e.getY(), e.getComponent().getHeight()) - 5;
+        // for debugging
+        System.out.println(tempXred + " " + tempYred);
         if (tempXred > 2 && tempXred < maxWidth / 2.20) {
             xred = tempXred;
         }
@@ -434,4 +528,64 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
     }
 
 
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        double x = convertX(e.getX(), e.getComponent().getWidth()) - 5;
+        double y = convertY(e.getY(), e.getComponent().getHeight()) - 5;
+        switch (page){
+            case 0:
+                if (x>=19&&x<=71&&y>=38&&y<=44) {
+                    page = 3; //game
+                    gamerun1p = false;
+                } else if (x>=30&&x<=59&&y>=27&&y<=35){
+                    page = 1; //help->rules
+                } else if (x>=32&&x<=57&&y>=17&&y<=25){
+                    System.exit(0); //exit
+                } else if(x>=22&&x<=68&&y>=47&&y<=52){
+                    page = 2; //levels
+                    gamerun1p = true;
+                }
+                break;
+            case 1:
+                page = 0;
+                break;
+            case 2:
+                if(x>=66&&x<=87&&y>=75&&y<=86){
+                    page = 0;
+                } else if(x>=12&&x<=77&&y>=39&&y<=49){
+                    ailevel = 1;
+                    page = 3;
+                } else if(x>=12&&x<=77&&y>=27&&y<=37){
+                    ailevel = 2;
+                    page = 3;
+                } else if(x>=12&&x<=77&&y>=15&&y<=25){
+                    ailevel = 3;
+                    page = 3;
+                }
+                break;
+
+        }
+        e.getComponent().repaint();
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
 }
