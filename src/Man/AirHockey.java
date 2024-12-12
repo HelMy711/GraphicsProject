@@ -20,7 +20,7 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
     double speedx = .3;  //speed of the ball
     double speedy = .2;
     boolean ballStationary = true;
-    int ailevel = 3;  // 1=> easy ,2=> med ,3=> hard
+    int ailevel = 2;  // 1=> easy ,2=> med ,3=> hard
 
     double xball = 45;
     double yball = 45;
@@ -74,9 +74,9 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
         gl.glLoadIdentity();
 
-        if (gamerun1p) {
-            run1p(gl);
-        } else
+      //  if (gamerun1p) {
+         //   run1p(gl);
+     //   } else
             run2p(gl);
         /* For two players method mouse and Keyboard */
     }
@@ -122,30 +122,31 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
 
     // A general AI method to handle common logic
     void AILogic(double speedX, double speedY, double minX, double maxX, double minY, double maxY) {
-    // Adjust Y position
-    if (yball > yblue) {
-        yblue += speedY;
-    } else if (yball < yblue) {
-        yblue -= speedY;
+        // Adjust Y position
+        if (yball > yblue) {
+            yblue += speedY;
+        } else if (yball < yblue) {
+            yblue -= speedY;
+        }
+
+        // Adjust X position
+        if (xball > xblue) {
+            xblue += speedX;
+        } else if (xball < xblue) {
+            xblue -= speedX;
+        }
+
+        // Clamp X and Y to allowed ranges
+        xblue = Math.max(minX, Math.min(xblue, maxX));
+        yblue = Math.max(minY, Math.min(yblue, maxY));
+
+        // Add random adjustments to avoid glitches
+        if (Math.abs(yblue - yball) < 10 && Math.abs(xblue - xball) < 10) {
+            yblue += (Math.random() * 4) - 2;
+            xblue += (Math.random() * 4) - 2;
+        }
     }
 
-    // Adjust X position
-    if (xball > xblue) {
-        xblue += speedX;
-    } else if (xball < xblue) {
-        xblue -= speedX;
-    }
-
-    // Clamp X and Y to allowed ranges
-    xblue = Math.max(minX, Math.min(xblue, maxX));
-    yblue = Math.max(minY, Math.min(yblue, maxY));
-
-    // Add random adjustments to avoid glitches
-    if (Math.abs(yblue - yball) < 10 && Math.abs(xblue - xball) < 10) {
-        yblue += (Math.random() * 4) - 2;
-        xblue += (Math.random() * 4) - 2;
-    }
-}
     // Easy AI
     void aiEasy() {
         AILogic(
@@ -162,13 +163,12 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
             AILogic(
                     0.01,
                     1,
-                    70,82,
+                    70, 82,
                     10, 80
             );
         }
     }
 
-    // Hard AI
     void aiHard() {
         AILogic(
                 2 + Math.random() * 0.2,
@@ -235,7 +235,10 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
                 s4 = 4;
                 s3++;
             }
-
+            if (s3 == 14) {
+                s3 = 4;
+                s4 = 4;
+            }
             speedx = 0;
             speedy = 0;
         }
@@ -246,6 +249,10 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
             if (s2 == 14) {
                 s2 = 4;
                 s1++;
+            }
+            if (s1 == 14) {
+                s1 = 4;
+                s2 = 4;
             }
             speedx = 0;
             speedy = 0;
