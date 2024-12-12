@@ -1,6 +1,7 @@
 package Man;
 
 import Texture.TextureReader;
+
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
@@ -12,13 +13,14 @@ import java.io.IOException;
 public class AirHockey extends AnimListener implements MouseMotionListener {
     int maxWidth = 100;
     int maxHeight = 100;
-int s1=4;
-int s2=4;
-int s3=4;
-int s4=4;
-    double speedx=.3;  //speed of the ball
-    double speedy=.2;
+    int s1 = 4;
+    int s2 = 4;
+    int s3 = 4;
+    int s4 = 4;
+    double speedx = .3;  //speed of the ball
+    double speedy = .2;
     boolean ballStationary = true;
+    int ailevel = 2;  // 1=> easy ,2=> med ,3=> hard
 
     double xball = 45;
     double yball = 45;
@@ -26,7 +28,7 @@ int s4=4;
     double yred = 45;
     double xblue = 80;
     double yblue = 45;
-    boolean gamerun1p = true;
+    boolean gamerun1p = true; /* For two players make it false */
     int t1 = 4;
     int t2 = 4;
     int t3 = 4;
@@ -67,19 +69,33 @@ int s4=4;
 
     @Override
     public void display(GLAutoDrawable gld) {
-if (xball==maxWidth&&yball==maxHeight) {
-     xball=45;
-   yball=45;}
-        time--;
-        calctime();
-       calcscore();
         GL gl = gld.getGL();
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
         gl.glLoadIdentity();
 
         if (gamerun1p) {
             run1p(gl);
+        } else
+            run2p(gl);
+
+
+
+        /* For two players method mouse and Keyboard */
+    }
+
+    void run2p(GL gl) {
+        DrawBackground(gl);
+        DrawBackground(gl);
+        DrawSprite(gl, xblue, yblue, 0, 1);
+        DrawSprite(gl, xred, yred, 3, 1);
+        DrawSprite(gl, xball, yball, 2, 1);
+        if (xball == maxWidth && yball == maxHeight) {
+            xball = 45;
+            yball = 45;
         }
+        time--;
+        calctime();
+        calcscore();
         if (!ballStationary) {
             xball += speedx;
             yball += speedy;
@@ -87,10 +103,12 @@ if (xball==maxWidth&&yball==maxHeight) {
 
         //الحته دي يسطا بتاع التصادم
 
-       if (!(s2==4&&s4==4)){
-           xball += 0.5*speedx;
-        yball += 0.5*speedy;}
+        if (!(s2 == 4 && s4 == 4)) {
+            xball += 0.5 * speedx;
+            yball += 0.5 * speedy;
+        }
         checkCollision();
+
         Drawnum(gl, 53, 91, t3, 0.7F);
         Drawnum(gl, 60, 91, t4, 0.7F);
         Drawnum(gl, 46, 91, 16, 0.6F);
@@ -102,42 +120,172 @@ if (xball==maxWidth&&yball==maxHeight) {
         Drawnum(gl, 77, -1, s4, 0.7F);
     }
 
+    void aiEasy() {
+        xblue = 75;
+        if (yball > yblue) {
+            yblue += 0.05;
+        } else if (yball < yblue) {
+            yblue -= 0.05;
+        }
+        if (xball > xblue) {
+            xblue += 1;
+        }
+        if (xball < xblue) {
+            xblue -= 1;
+        }
+        if (xblue > 80) {
+            xblue = 80;
+        }
+        if (xblue < 60) {
+            xblue = 60;
+        }
+
+        // عشان ميعمل جليتش
+        if (Math.abs(yblue - yball) < 10 && Math.abs(xblue - xball) < 10) {
+            yblue += Math.random() * 4 - 2;
+            xblue += Math.random() * 4 - 2;
+        }
+
+    }
+
+
+    void aiMid() {
+        System.out.println("ME");
+        if (Math.abs(yblue - yball) < 10 && Math.abs(xblue - xball) < 10) {
+            yblue += Math.random() * 4 - 2;
+            xblue += Math.random() * 4 - 2;
+        }
+
+        if (yball > yblue && xball>45) {
+            yblue += 1;
+        } else if (yball < yblue&& xball>45) {
+            yblue -= 1;
+        }
+        if (yblue > 80) {
+            yblue = 80;
+        }
+        if (yblue < 10) {
+            yblue = 10;
+        }
+        if (xball > xblue) {
+            xblue += 0.01;
+        } else if (xball < xblue) {
+            xblue -= 0.01;
+        }
+        if (xblue > 82) {
+            xblue = 82;
+        }
+        if (xblue < 70) {
+            xblue = 70;
+        }
+
+    }
+
+    void aiHard() {
+//        yblue += Math.random() * 2 - 1;
+//        xblue += Math.random() * 2 - 1;
+        if (yball > yblue) {
+            yblue += 1.3 + (Math.random() * 0.2);
+        } else if (yball < yblue) {
+            yblue -= 1.3 + (Math.random() * 0.2);
+        }
+        if (yblue > 90) {
+            yblue = 90;
+        }
+        if (yblue < 10) {
+            yblue = 10;
+        }
+        if (xball > xblue) {
+            xblue += 2 + (Math.random() * 0.2);
+        } else if (xball < xblue) {
+            xblue -= 2 + (Math.random() * 0.2);
+        }
+        if (xblue > 82) {
+            xblue = 82;
+        }
+        if (xblue < 60) {
+            xblue = 60;
+        }
+
+    }
+
+
+    //    for 1 player and AI methods
     void run1p(GL gl) {
         DrawBackground(gl);
-
         DrawSprite(gl, xblue, yblue, 0, 1);
         DrawSprite(gl, xred, yred, 3, 1);
         DrawSprite(gl, xball, yball, 2, 1);
+        if (xball == maxWidth && yball == maxHeight) {
+            xball = 45;
+            yball = 45;
+        }
+        time--;
+        calctime();
+        calcscore();
+        if (!ballStationary) {
+            xball += speedx;
+            yball += speedy;
+        }
+
+        //الحته دي يسطا بتاع التصادم
+
+        if (!(s2 == 4 && s4 == 4)) {
+            xball += 0.5 * speedx;
+            yball += 0.5 * speedy;
+        }
+        checkCollision();
+
+        Drawnum(gl, 53, 91, t3, 0.7F);
+        Drawnum(gl, 60, 91, t4, 0.7F);
+        Drawnum(gl, 46, 91, 16, 0.6F);
+        Drawnum(gl, 39, 91, t2, 0.7F);
+        Drawnum(gl, 32, 91, t1, 0.7F);
+        Drawnum(gl, 20, -1, s1, 0.7F);
+        Drawnum(gl, 27, -1, s2, 0.7F);
+        Drawnum(gl, 70, -1, s3, 0.7F);
+        Drawnum(gl, 77, -1, s4, 0.7F);
+
+        if (ailevel == 2) {
+//            System.out.println("Mid");
+            aiMid();
+        } else if (ailevel == 3) {
+            aiHard();
+//            System.out.println("hard");
+        } else {
+            aiEasy();
+//            System.out.println("Easy");
+        }
     }
 
-   public void calcscore(){
-       if (xball<=2&&yball>=30&&yball<=60) {
-           xball=maxWidth;
-           yball=maxHeight;
-s4++;
-if (s4==14) {
-    s4=4;
-    s3++;
-}
+    public void calcscore() {
+        if (xball <= 2 && yball >= 30 && yball <= 60) {
+            xball = maxWidth;
+            yball = maxHeight;
+            s4++;
+            if (s4 == 14) {
+                s4 = 4;
+                s3++;
+            }
 
-speedx=0;
-      speedy=0;
-      }
-if (xball>=85&&yball>=30&&yball<=60) {
-    xball=maxWidth;
-    yball=maxHeight;
-    s2++;
-    if (s2==14) {
-        s2=4;
-        s1++;
+            speedx = 0;
+            speedy = 0;
+        }
+        if (xball >= 85 && yball >= 30 && yball <= 60) {
+            xball = maxWidth;
+            yball = maxHeight;
+            s2++;
+            if (s2 == 14) {
+                s2 = 4;
+                s1++;
+            }
+            speedx = 0;
+            speedy = 0;
+        }
+
+
     }
-speedx=0;
-speedy=0;
-}
 
-
-
-   }
     public void calctime() {
         if (time <= 0) {
             time = 120;
@@ -254,8 +402,11 @@ speedy=0;
 
     @Override
     public void keyTyped(KeyEvent e) {
+
     }
+
     private boolean[] keys = new boolean[256];
+
     public void handleKeyPressed() {
         if (keys[KeyEvent.VK_UP] && yblue < maxHeight - 20) {
             yblue += 5;
@@ -276,13 +427,17 @@ speedy=0;
 
     @Override
     public void keyPressed(KeyEvent e) {
-        keys[e.getKeyCode()] = true;
-        handleKeyPressed();
+        if (!gamerun1p) {
+            keys[e.getKeyCode()] = true;
+            handleKeyPressed();
+        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        keys[e.getKeyCode()] = false;
+        if (!gamerun1p) {
+            keys[e.getKeyCode()] = false;
+        }
     }
 
 
@@ -294,11 +449,9 @@ speedy=0;
     public void mouseMoved(MouseEvent e) {
         double tempXred = convertX(e.getX(), e.getComponent().getWidth()) - 5;
         double tempYred = convertY(e.getY(), e.getComponent().getHeight()) - 5;
-
         if (tempXred > 2 && tempXred < maxWidth / 2.20) {
             xred = tempXred;
         }
-
         if (tempYred > 6 && tempYred < maxHeight - 16) {
             yred = tempYred;
         }
