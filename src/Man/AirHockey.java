@@ -20,7 +20,7 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
     double speedx = .3;  //speed of the ball
     double speedy = .2;
     boolean ballStationary = true;
-    int ailevel = 3;  // 1=> easy ,2=> med ,3=> hard
+    int ailevel = 2;  // 1=> easy ,2=> med ,3=> hard
 
     double xball = 45;
     double yball = 45;
@@ -45,7 +45,7 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
             "puck.png", //2
             "redhockeystick.png" //3
             , "0.png", "1 .png", "2 .png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png", "colon.png", "colon1.png", "colon2.png",
-            "LEVELS.png","game-rules.png","home1.png"
+            "LEVELS.png", "game-rules.png", "home1.png"
     };
     TextureReader.Texture[] texture = new TextureReader.Texture[textureNames.length];
     int[] textures = new int[textureNames.length];
@@ -77,7 +77,7 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
         gl.glLoadIdentity();
 
-        switch (page){
+        switch (page) {
             case 0: // Home
                 DrawBackground0(gl);
                 break;
@@ -140,30 +140,31 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
 
     // A general AI method to handle common logic
     void AILogic(double speedX, double speedY, double minX, double maxX, double minY, double maxY) {
-    // Adjust Y position
-    if (yball > yblue) {
-        yblue += speedY;
-    } else if (yball < yblue) {
-        yblue -= speedY;
+        // Adjust Y position
+        if (yball > yblue) {
+            yblue += speedY;
+        } else if (yball < yblue) {
+            yblue -= speedY;
+        }
+
+        // Adjust X position
+        if (xball > xblue) {
+            xblue += speedX;
+        } else if (xball < xblue) {
+            xblue -= speedX;
+        }
+
+        // Clamp X and Y to allowed ranges
+        xblue = Math.max(minX, Math.min(xblue, maxX));
+        yblue = Math.max(minY, Math.min(yblue, maxY));
+
+        // Add random adjustments to avoid glitches
+        if (Math.abs(yblue - yball) < 10 && Math.abs(xblue - xball) < 10) {
+            yblue += (Math.random() * 4) - 2;
+            xblue += (Math.random() * 4) - 2;
+        }
     }
 
-    // Adjust X position
-    if (xball > xblue) {
-        xblue += speedX;
-    } else if (xball < xblue) {
-        xblue -= speedX;
-    }
-
-    // Clamp X and Y to allowed ranges
-    xblue = Math.max(minX, Math.min(xblue, maxX));
-    yblue = Math.max(minY, Math.min(yblue, maxY));
-
-    // Add random adjustments to avoid glitches
-    if (Math.abs(yblue - yball) < 10 && Math.abs(xblue - xball) < 10) {
-        yblue += (Math.random() * 4) - 2;
-        xblue += (Math.random() * 4) - 2;
-    }
-}
     // Easy AI
     void aiEasy() {
         AILogic(
@@ -180,7 +181,7 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
             AILogic(
                     0.01,
                     1,
-                    70,82,
+                    70, 82,
                     10, 80
             );
         }
@@ -253,7 +254,10 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
                 s4 = 4;
                 s3++;
             }
-
+            if (s3 == 14) {
+                s3 = 4;
+                s4 = 4;
+            }
             speedx = 0;
             speedy = 0;
         }
@@ -264,6 +268,10 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
             if (s2 == 14) {
                 s2 = 4;
                 s1++;
+            }
+            if (s1 == 14) {
+                s1 = 4;
+                s2 = 4;
             }
             speedx = 0;
             speedy = 0;
@@ -410,7 +418,6 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
     }
 
 
-
     void checkCollision() {
         // blue player
         if (Math.abs(xball - xblue) < 5 && Math.abs(yball - yblue) < 10) {
@@ -532,16 +539,16 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
     public void mouseClicked(MouseEvent e) {
         double x = convertX(e.getX(), e.getComponent().getWidth()) - 5;
         double y = convertY(e.getY(), e.getComponent().getHeight()) - 5;
-        switch (page){
+        switch (page) {
             case 0:
-                if (x>=19&&x<=71&&y>=38&&y<=44) {
+                if (x >= 19 && x <= 71 && y >= 38 && y <= 44) {
                     page = 3; //game
                     gamerun1p = false;
-                } else if (x>=30&&x<=59&&y>=27&&y<=35){
+                } else if (x >= 30 && x <= 59 && y >= 27 && y <= 35) {
                     page = 1; //help->rules
-                } else if (x>=32&&x<=57&&y>=17&&y<=25){
+                } else if (x >= 32 && x <= 57 && y >= 17 && y <= 25) {
                     System.exit(0); //exit
-                } else if(x>=22&&x<=68&&y>=47&&y<=52){
+                } else if (x >= 22 && x <= 68 && y >= 47 && y <= 52) {
                     page = 2; //levels
                     gamerun1p = true;
                 }
@@ -550,15 +557,15 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
                 page = 0;
                 break;
             case 2:
-                if(x>=66&&x<=87&&y>=75&&y<=86){
+                if (x >= 66 && x <= 87 && y >= 75 && y <= 86) {
                     page = 0;
-                } else if(x>=12&&x<=77&&y>=39&&y<=49){
+                } else if (x >= 12 && x <= 77 && y >= 39 && y <= 49) {
                     ailevel = 1;
                     page = 3;
-                } else if(x>=12&&x<=77&&y>=27&&y<=37){
+                } else if (x >= 12 && x <= 77 && y >= 27 && y <= 37) {
                     ailevel = 2;
                     page = 3;
-                } else if(x>=12&&x<=77&&y>=15&&y<=25){
+                } else if (x >= 12 && x <= 77 && y >= 15 && y <= 25) {
                     ailevel = 3;
                     page = 3;
                 }

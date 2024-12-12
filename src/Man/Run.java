@@ -48,7 +48,7 @@ public class Run extends JFrame {
         glcanvas.addMouseMotionListener((MouseMotionListener) listener);
         glcanvas.addMouseListener((MouseListener) listener);
         getContentPane().add(glcanvas, BorderLayout.CENTER);
-        animator = new FPSAnimator(glcanvas, 90);
+        animator = new FPSAnimator(glcanvas, 60);
 
 //        JPanel panel = new JPanel();
 //        panel.add(startButton, BorderLayout.CENTER);
