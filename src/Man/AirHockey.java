@@ -20,7 +20,7 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
     double speedx = .3;  //speed of the ball
     double speedy = .2;
     boolean ballStationary = true;
-    int ailevel = 2;  // 1=> easy ,2=> med ,3=> hard
+    int ailevel = 3;  // 1=> easy ,2=> med ,3=> hard
 
     double xball = 45;
     double yball = 45;
@@ -40,7 +40,8 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
             "field.png", //1
             "puck.png", //2
             "redhockeystick.png" //3
-            , "0.png", "1 .png", "2 .png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png", "colon.png", "colon1.png", "colon2.png"
+            , "0.png", "1 .png", "2 .png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png", "colon.png", "colon1.png", "colon2.png",
+            "game-rules.png"
     };
     TextureReader.Texture[] texture = new TextureReader.Texture[textureNames.length];
     int[] textures = new int[textureNames.length];
@@ -77,9 +78,6 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
             run1p(gl);
         } else
             run2p(gl);
-
-
-
         /* For two players method mouse and Keyboard */
     }
 
@@ -120,97 +118,66 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
         Drawnum(gl, 77, -1, s4, 0.7F);
     }
 
+// Ai difficulty of the game
+    // A general AI method to handle common logic
+void AILogic(double speedX, double speedY, double minX, double maxX, double minY, double maxY) {
+    // Adjust Y position
+    if (yball > yblue) {
+        yblue += speedY;
+    } else if (yball < yblue) {
+        yblue -= speedY;
+    }
+
+    // Adjust X position
+    if (xball > xblue) {
+        xblue += speedX;
+    } else if (xball < xblue) {
+        xblue -= speedX;
+    }
+
+    // Clamp X and Y to allowed ranges
+    xblue = Math.max(minX, Math.min(xblue, maxX));
+    yblue = Math.max(minY, Math.min(yblue, maxY));
+
+    // Add random adjustments to avoid glitches
+    if (Math.abs(yblue - yball) < 10 && Math.abs(xblue - xball) < 10) {
+        yblue += (Math.random() * 4) - 2;
+        xblue += (Math.random() * 4) - 2;
+    }
+}
+    // Easy AI
     void aiEasy() {
-        xblue = 75;
-        if (yball > yblue) {
-            yblue += 0.05;
-        } else if (yball < yblue) {
-            yblue -= 0.05;
-        }
-        if (xball > xblue) {
-            xblue += 1;
-        }
-        if (xball < xblue) {
-            xblue -= 1;
-        }
-        if (xblue > 80) {
-            xblue = 80;
-        }
-        if (xblue < 60) {
-            xblue = 60;
-        }
-
-        // عشان ميعمل جليتش
-        if (Math.abs(yblue - yball) < 10 && Math.abs(xblue - xball) < 10) {
-            yblue += Math.random() * 4 - 2;
-            xblue += Math.random() * 4 - 2;
-        }
-
+        AILogic(
+                1,
+                0.05,
+                60, 80,
+                10, 80
+        );
     }
 
-
+    // Medium AI
     void aiMid() {
-        System.out.println("ME");
-        if (Math.abs(yblue - yball) < 10 && Math.abs(xblue - xball) < 10) {
-            yblue += Math.random() * 4 - 2;
-            xblue += Math.random() * 4 - 2;
+        if (xball > 45) {
+            AILogic(
+                    0.01,
+                    1,
+                    70,82,
+                    10, 80
+            );
         }
-
-        if (yball > yblue && xball>45) {
-            yblue += 1;
-        } else if (yball < yblue&& xball>45) {
-            yblue -= 1;
-        }
-        if (yblue > 80) {
-            yblue = 80;
-        }
-        if (yblue < 10) {
-            yblue = 10;
-        }
-        if (xball > xblue) {
-            xblue += 0.01;
-        } else if (xball < xblue) {
-            xblue -= 0.01;
-        }
-        if (xblue > 82) {
-            xblue = 82;
-        }
-        if (xblue < 70) {
-            xblue = 70;
-        }
-
     }
 
+    // Hard AI
     void aiHard() {
-//        yblue += Math.random() * 2 - 1;
-//        xblue += Math.random() * 2 - 1;
-        if (yball > yblue) {
-            yblue += 1.3 + (Math.random() * 0.2);
-        } else if (yball < yblue) {
-            yblue -= 1.3 + (Math.random() * 0.2);
-        }
-        if (yblue > 90) {
-            yblue = 90;
-        }
-        if (yblue < 10) {
-            yblue = 10;
-        }
-        if (xball > xblue) {
-            xblue += 2 + (Math.random() * 0.2);
-        } else if (xball < xblue) {
-            xblue -= 2 + (Math.random() * 0.2);
-        }
-        if (xblue > 82) {
-            xblue = 82;
-        }
-        if (xblue < 60) {
-            xblue = 60;
-        }
-
+        AILogic(
+                2 + Math.random() * 0.2,
+                1.3 + Math.random() * 0.2,
+                60, 82,
+                10, 90
+        );
     }
 
-
-    //    for 1 player and AI methods
+    // for 1 player and AI methods
     void run1p(GL gl) {
         DrawBackground(gl);
         DrawSprite(gl, xblue, yblue, 0, 1);
