@@ -119,8 +119,9 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
     }
 
 // Ai difficulty of the game
+
     // A general AI method to handle common logic
-void AILogic(double speedX, double speedY, double minX, double maxX, double minY, double maxY) {
+    void AILogic(double speedX, double speedY, double minX, double maxX, double minY, double maxY) {
     // Adjust Y position
     if (yball > yblue) {
         yblue += speedY;
