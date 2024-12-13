@@ -9,6 +9,7 @@ import javax.media.opengl.glu.GLU;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.security.Key;
 
 public class AirHockey extends AnimListener implements MouseMotionListener, MouseListener, KeyListener {
     int maxWidth = 100;
@@ -482,8 +483,41 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
         System.out.println("Key pressed: " + key);
 
         if (page == 0) {
-            if (key == KeyEvent.VK_ESCAPE) {
+            if (key == KeyEvent.VK_ESCAPE || key == KeyEvent.VK_E) {
                 System.exit(0); // exit
+            }
+            if(key == KeyEvent.VK_1){// if press 1 => means 1 player
+                gamerun1p=true;
+                page=2;
+
+            }
+            if(key == KeyEvent.VK_2){ // if press 2 => means 2 player
+                gamerun1p=false;
+                page=2;
+            }
+            if (key == KeyEvent.VK_H){
+                page=1;
+            }
+        }
+
+
+
+        if (page==2){
+            if(key == KeyEvent.VK_E){// if press 1 => means 1 player
+
+                ailevel=1;
+                page=3;
+
+            }
+            if(key == KeyEvent.VK_M){ // if press 2 => means 2 player
+                ailevel=2;
+                page=3;
+
+            }
+            if(key == KeyEvent.VK_H){ // if press 2 => means 2 player
+                ailevel=3;
+                page=3;
+
             }
         }
 
