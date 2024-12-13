@@ -10,6 +10,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.security.Key;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 public class AirHockey extends AnimListener implements MouseMotionListener, MouseListener, KeyListener {
     int maxWidth = 100;
@@ -36,6 +41,9 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
     int t3 = 4;
     int t4 = 4;
     int time = 120;
+    int scoreRed=0;
+    int scoreBlue=0;
+    int highScore=0;
     static int page;
 
 //    TextRenderer renderer = new TextRenderer(new Font("sanaSerif", Font.BOLD, 10));
@@ -247,7 +255,11 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
     }
 
     public void calcscore() {
-        if (xball <= 2 && yball >= 30 && yball <= 60) {
+        highScore=getHighScore();
+
+
+        if (xball <= 2 && yball >= 30 && yball <= 60) { //blueOne
+            scoreBlue++;
             xball = maxWidth;
             yball = maxHeight;
             s4++;
@@ -262,7 +274,9 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
             speedx = 0;
             speedy = 0;
         }
-        if (xball >= 85 && yball >= 30 && yball <= 60) {
+        if (xball >= 85 && yball >= 30 && yball <= 60) {  //redOne
+
+            scoreRed++;
             xball = maxWidth;
             yball = maxHeight;
             s2++;
@@ -278,7 +292,42 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
             speedy = 0;
         }
 
+        if(scoreBlue<scoreRed){
+            if (highScore<scoreRed){
+                highScore=scoreRed;
+            }
+        }
+        else {
+            if (highScore<scoreBlue){
+                highScore=scoreBlue;
+            }
+        }
 
+        saveHighScore(highScore);
+        System.out.println("highScore "+highScore);
+
+
+    }
+
+    public void saveHighScore(int highScore) {
+        try (FileWriter writer = new FileWriter("highScore.txt")) {
+            // write in file
+            writer.write(String.valueOf(highScore));
+        } catch (IOException e) {
+            System.out.println("Error: Unable to save high score.");
+            e.printStackTrace();
+        }
+    }
+    public int getHighScore() {
+        int highScore = 0;
+        try (Scanner scanner = new Scanner(new File("highscore.txt"))) {
+            if (scanner.hasNextInt()) {
+                highScore = scanner.nextInt();
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("High score file not found. Starting fresh.");
+        }
+        return highScore;
     }
 
     public void calctime() {
@@ -495,7 +544,7 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
                 gamerun1p=false;
                 page=2;
             }
-            if (key == KeyEvent.VK_H){
+            if (key == KeyEvent.VK_H){ // go to help
                 page=1;
             }
         }
@@ -503,18 +552,18 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
 
 
         if (page==2){
-            if(key == KeyEvent.VK_E){// if press 1 => means 1 player
+            if(key == KeyEvent.VK_E){// if press E => means  Easy
 
                 ailevel=1;
                 page=3;
 
             }
-            if(key == KeyEvent.VK_M){ // if press 2 => means 2 player
+            if(key == KeyEvent.VK_M){ // if press M => means Medium
                 ailevel=2;
                 page=3;
 
             }
-            if(key == KeyEvent.VK_H){ // if press 2 => means 2 player
+            if(key == KeyEvent.VK_H){ // if press H => means Hard
                 ailevel=3;
                 page=3;
 
