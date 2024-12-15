@@ -1,0 +1,4 @@
+Player1: TestPlayer1, Score: 10
+----------------------
+Player1: kimo, Score: 0
+----------------------

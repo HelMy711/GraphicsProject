@@ -38,9 +38,13 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
     int scoreRed = 0;
     int scoreBlue = 0;
     int highScore = 0;
+    private int lastHighScore = -1;
     static int page;
+    String player1Name = "", player2Name = "";
+    int player1Score = scoreRed, player2Score = scoreBlue;
+    Scanner input = new Scanner(System.in);
 
-    //  TextRenderer renderer = new TextRenderer(new Font("sanaSerif", Font.BOLD, 10));
+//  TextRenderer renderer = new TextRenderer(new Font("sanaSerif", Font.BOLD, 10));
     String[] textureNames = {
             "bluehockeystick.png", //0
             "field.png", //1
@@ -73,7 +77,6 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
         }
     }
 
-
     @Override
     public void display(GLAutoDrawable gld) {
         GL gl = gld.getGL();
@@ -91,10 +94,32 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
                 draw(gl, textureNames.length - 3);
                 break;
             case 3: // Game
-                if (gamerun1p) run1p(gl);
-                else run2p(gl);
+                if (start){
+                    initializeGame();
+                    System.out.println("Page: " + page + ", Player1 Score: " + player1Score + ", Player2 Score: " + player2Score+"\n");
+                    System.out.println("Saving scores: " + player1Name + " - " + player1Score + ", " + player2Name + " - " + player2Score+"\n");
+//                    System.out.println("Game initialized with players: " + player1Name + ", " + player2Name);
+                    start = false;
+                }
+
+//                if (player1Name.isEmpty()) player1Name = "Player1";
+                if (!gamerun1p && player2Name.isEmpty()) player2Name = "Player2: AI";
+
+                if (gamerun1p) {
+                    run1p(gl);
+                } else {
+                    run2p(gl);
+                }
+//                // Check if the game is over
+                if (s1 == 7 && s2 == 7) {
+                    endGame();
+                    page = 0;
+                    start = true;
+                }
+                break;
         }
 
+//        getScoresAndNamesFromFile();
 //        if (gamerun1p) {
 //            run1p(gl);
 //        } else
@@ -303,17 +328,30 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
             speedx = 0;
             speedy = 0;
         }
-        if (scoreBlue < scoreRed) {
-            if (highScore < scoreRed) {
-                highScore = scoreRed;
-            }
-        } else {
-            if (highScore < scoreBlue) {
-                highScore = scoreBlue;
-            }
+//        if (scoreBlue < scoreRed) {
+//            if (highScore < scoreRed) {
+//                highScore = scoreRed;
+//            }
+//        } else {
+//            if (highScore < scoreBlue) {
+//                highScore = scoreBlue;
+//            }
+//        }
+        if (Math.max(scoreBlue, scoreRed) > highScore) {
+            highScore = Math.max(scoreBlue, scoreRed);
+            saveHighScore(highScore);
         }
-        saveHighScore(highScore);
-        System.out.println("highScore " + highScore);
+
+        if (highScore != lastHighScore) {
+            System.out.println("New High Score: " + highScore);
+            lastHighScore = highScore;
+        }
+
+        player1Score = scoreRed;
+        player2Score = scoreBlue;
+
+//        saveHighScore(highScore);
+//        System.out.println("highScore " + highScore);
 
     }
 
@@ -327,16 +365,66 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
         }
     }
 
+//    public int getHighScore() {
+//        int highScore = 0;
+//        try (Scanner scanner = new Scanner(new File("highScore.txt"))) {
+//            if (scanner.hasNextInt()) {
+//                highScore = scanner.nextInt();
+//            }
+//        } catch (FileNotFoundException e) {
+//            System.out.println("High score file not found. Starting fresh.");
+//        }
+//        return highScore;
+//    }
     public int getHighScore() {
-        int highScore = 0;
-        try (Scanner scanner = new Scanner(new File("highscore.txt"))) {
-            if (scanner.hasNextInt()) {
-                highScore = scanner.nextInt();
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("High score file not found. Starting fresh.");
+        try (Scanner scanner = new Scanner(new File("highScore.txt"))) {
+            return scanner.hasNextInt() ? scanner.nextInt() : 0;
+        } catch (IOException e) {
+            System.err.println("Error reading high score file: " + e.getMessage());
+            return 0;
         }
-        return highScore;
+    }
+
+
+    public synchronized void saveScoresAndNamesToFile(String player1Name, int player1Score,
+                                                      String player2Name, int player2Score) {
+        if (player1Name == null || player1Name.isEmpty()) {
+            System.out.println("Error: Player1 name is not set!");
+            return;
+        }
+
+        if (!gamerun1p && (player2Name == null || player2Name.isEmpty())) {
+            System.out.println("Error: Player2 name is not set!");
+            return;
+        }
+
+        try (FileWriter writer = new FileWriter("playersNamesAndTheirScore.txt", true)) {
+            writer.write("Player1: " + player1Name + ", Score: " + player1Score + "\n");
+            if (!gamerun1p) {
+                writer.write("Player2: " + player2Name + ", Score: " + player2Score + "\n");
+            }
+            writer.write("----------------------\n");
+            System.out.println("Players names and scores saved successfully!");
+        } catch (IOException e) {
+            System.out.println("An error occurred while saving the scores: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void initializeGame() {
+        System.out.println("Enter player name:");
+        player1Name = input.nextLine();
+        if (!gamerun1p) {
+            System.out.println("Enter player 2 name:");
+            player2Name = input.nextLine();
+        }
+        highScore = getHighScore(); // Load high score from file
+    }
+
+    public void endGame() {
+        player1Score = scoreRed;
+        player2Score = scoreBlue;
+        saveScoresAndNamesToFile(player1Name, player1Score, player2Name, player2Score);
     }
 
     public void calctime() {
