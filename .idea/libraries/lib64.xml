@@ -1,22 +1,25 @@
 <component name="libraryTable">
   <library name="lib64">
     <CLASSES>
-      <root url="jar://D:/Abdo/faculty/JOGLwin/lib64/gluegen-rt.jar!/" />
-      <root url="jar://D:/Abdo/faculty/JOGLwin/lib64/jogl.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../Abdo/faculty/JOGLwin/lib64/gluegen-rt.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../Abdo/faculty/JOGLwin/lib64/jogl.jar!/" />
       <root url="file://$PROJECT_DIR$/../../JOGLwin/lib64" />
       <root url="file://$PROJECT_DIR$/../../JOGLwin/lib32" />
+      <root url="file://$PROJECT_DIR$/../Downloads/JOGLwin/JOGLwin/lib64" />
     </CLASSES>
     <JAVADOC />
     <NATIVE>
-      <root url="file://D:/Abdo/faculty/JOGLwin/lib64" />
-      <root url="file://D:/Abdo/faculty/JOGLwin/lib64" />
-      <root url="file://D:/Abdo/faculty/JOGLwin/lib64" />
-      <root url="file://D:/Abdo/faculty/JOGLwin/lib64" />
+      <root url="file://$PROJECT_DIR$/../Abdo/faculty/JOGLwin/lib64" />
+      <root url="file://$PROJECT_DIR$/../Abdo/faculty/JOGLwin/lib64" />
+      <root url="file://$PROJECT_DIR$/../Abdo/faculty/JOGLwin/lib64" />
+      <root url="file://$PROJECT_DIR$/../Abdo/faculty/JOGLwin/lib64" />
       <root url="file://$PROJECT_DIR$/../../JOGLwin/lib64" />
       <root url="file://$PROJECT_DIR$/../../JOGLwin/lib32" />
+      <root url="file://$PROJECT_DIR$/../Downloads/JOGLwin/JOGLwin/lib64" />
     </NATIVE>
     <SOURCES />
     <jarDirectory url="file://$PROJECT_DIR$/../../JOGLwin/lib32" recursive="false" />
     <jarDirectory url="file://$PROJECT_DIR$/../../JOGLwin/lib64" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/../Downloads/JOGLwin/JOGLwin/lib64" recursive="false" />
   </library>
 </component>

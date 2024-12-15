@@ -5,12 +5,12 @@ import Texture.TextureReader;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.io.IOException;
+import java.util.*;
+import java.io.*;
 
-public class AirHockey extends AnimListener implements MouseMotionListener {
+public class AirHockey extends AnimListener implements MouseMotionListener, MouseListener, KeyListener {
     int maxWidth = 100;
     int maxHeight = 100;
     int s1 = 4;
@@ -29,19 +29,25 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
     double xblue = 80;
     double yblue = 45;
     boolean gamerun1p = true; /* For two players make it false */
+    boolean start = true;
     int t1 = 4;
     int t2 = 4;
     int t3 = 4;
     int t4 = 4;
     int time = 120;
+    int scoreRed = 0;
+    int scoreBlue = 0;
+    int highScore = 0;
+    static int page;
 
+    //  TextRenderer renderer = new TextRenderer(new Font("sanaSerif", Font.BOLD, 10));
     String[] textureNames = {
             "bluehockeystick.png", //0
             "field.png", //1
             "puck.png", //2
             "redhockeystick.png" //3
             , "0.png", "1 .png", "2 .png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png", "colon.png", "colon1.png", "colon2.png",
-            "game-rules.png"
+            "LEVELS.png", "game-rules.png", "home1.png"
     };
     TextureReader.Texture[] texture = new TextureReader.Texture[textureNames.length];
     int[] textures = new int[textureNames.length];
@@ -74,11 +80,26 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
         gl.glLoadIdentity();
 
-        if (gamerun1p) {
-            run1p(gl);
-        } else
-            run2p(gl);
-        /* For two players method mouse and Keyboard */
+        switch (page) {
+            case 0: // Home
+                draw(gl, textureNames.length - 1);
+                break;
+            case 1: // Rules -> Help
+                draw(gl, textureNames.length - 2);
+                break;
+            case 2: // Levels
+                draw(gl, textureNames.length - 3);
+                break;
+            case 3: // Game
+                if (gamerun1p) run1p(gl);
+                else run2p(gl);
+        }
+
+//        if (gamerun1p) {
+//            run1p(gl);
+//        } else
+//            run2p(gl);
+//        /* For two players method mouse and Keyboard */
     }
 
     void run2p(GL gl) {
@@ -122,30 +143,31 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
 
     // A general AI method to handle common logic
     void AILogic(double speedX, double speedY, double minX, double maxX, double minY, double maxY) {
-    // Adjust Y position
-    if (yball > yblue) {
-        yblue += speedY;
-    } else if (yball < yblue) {
-        yblue -= speedY;
+        // Adjust Y position
+        if (yball > yblue) {
+            yblue += speedY;
+        } else if (yball < yblue) {
+            yblue -= speedY;
+        }
+
+        // Adjust X position
+        if (xball > xblue) {
+            xblue += speedX;
+        } else if (xball < xblue) {
+            xblue -= speedX;
+        }
+
+        // Clamp X and Y to allowed ranges
+        xblue = Math.max(minX, Math.min(xblue, maxX));
+        yblue = Math.max(minY, Math.min(yblue, maxY));
+
+        // Add random adjustments to avoid glitches
+        if (Math.abs(yblue - yball) < 10 && Math.abs(xblue - xball) < 10) {
+            yblue += (Math.random() * 4) - 2;
+            xblue += (Math.random() * 4) - 2;
+        }
     }
 
-    // Adjust X position
-    if (xball > xblue) {
-        xblue += speedX;
-    } else if (xball < xblue) {
-        xblue -= speedX;
-    }
-
-    // Clamp X and Y to allowed ranges
-    xblue = Math.max(minX, Math.min(xblue, maxX));
-    yblue = Math.max(minY, Math.min(yblue, maxY));
-
-    // Add random adjustments to avoid glitches
-    if (Math.abs(yblue - yball) < 10 && Math.abs(xblue - xball) < 10) {
-        yblue += (Math.random() * 4) - 2;
-        xblue += (Math.random() * 4) - 2;
-    }
-}
     // Easy AI
     void aiEasy() {
         AILogic(
@@ -162,7 +184,7 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
             AILogic(
                     0.01,
                     1,
-                    70,82,
+                    70, 82,
                     10, 80
             );
         }
@@ -226,9 +248,9 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
         }
     }
 
-    public void drawRoles(GL gl) {
+    public void draw(GL gl, int index) {
         gl.glEnable(GL.GL_BLEND);
-        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[texture.length-1]);
+        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[index]);
         gl.glPushMatrix();
         gl.glBegin(GL.GL_QUADS);
         gl.glTexCoord2f(0.0f, 0.0f);
@@ -245,7 +267,10 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
     }
 
     public void calcscore() {
-        if (xball <= 2 && yball >= 30 && yball <= 60) {
+        highScore = getHighScore();
+
+        if (xball <= 2 && yball >= 30 && yball <= 60) { //blueOne
+            scoreBlue++;
             xball = maxWidth;
             yball = maxHeight;
             s4++;
@@ -253,11 +278,17 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
                 s4 = 4;
                 s3++;
             }
+            if (s3 == 14) {
+                s3 = 4;
+                s4 = 4;
+            }
 
             speedx = 0;
             speedy = 0;
         }
-        if (xball >= 85 && yball >= 30 && yball <= 60) {
+        if (xball >= 85 && yball >= 30 && yball <= 60) { //redOne
+            scoreRed++;
+
             xball = maxWidth;
             yball = maxHeight;
             s2++;
@@ -265,11 +296,47 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
                 s2 = 4;
                 s1++;
             }
+            if (s1 == 14) {
+                s1 = 4;
+                s2 = 4;
+            }
             speedx = 0;
             speedy = 0;
         }
+        if (scoreBlue < scoreRed) {
+            if (highScore < scoreRed) {
+                highScore = scoreRed;
+            }
+        } else {
+            if (highScore < scoreBlue) {
+                highScore = scoreBlue;
+            }
+        }
+        saveHighScore(highScore);
+        System.out.println("highScore " + highScore);
 
+    }
 
+    public void saveHighScore(int highScore) {
+        try (FileWriter writer = new FileWriter("highScore.txt")) {
+            // write in file
+            writer.write(String.valueOf(highScore));
+        } catch (IOException e) {
+            System.out.println("Error: Unable to save high score.");
+            e.printStackTrace();
+        }
+    }
+
+    public int getHighScore() {
+        int highScore = 0;
+        try (Scanner scanner = new Scanner(new File("highscore.txt"))) {
+            if (scanner.hasNextInt()) {
+                highScore = scanner.nextInt();
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("High score file not found. Starting fresh.");
+        }
+        return highScore;
     }
 
     public void calctime() {
@@ -413,10 +480,54 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        int key = e.getKeyCode();
+
+        //for debugging
+        System.out.println("Key pressed: " + key);
+
+        if (page == 0) {
+            if (key == KeyEvent.VK_ESCAPE || key == KeyEvent.VK_E) {
+                System.exit(0); // exit
+            }
+            if (key == KeyEvent.VK_1) {// if press 1 => means 1 player
+                gamerun1p = true;
+                page = 2;
+            }
+            if (key == KeyEvent.VK_2) { // if press 2 => means 2 player
+                gamerun1p = false;
+                page = 2;
+            }
+            if (key == KeyEvent.VK_H) { // go to help
+                page = 1;
+            }
+        }
+
+        if (page == 2) {
+            if (key == KeyEvent.VK_E) {// if press E => means  Easy
+                ailevel = 1;
+                page = 3;
+            }
+            if (key == KeyEvent.VK_M) { // if press M => means Medium
+                ailevel = 2;
+                page = 3;
+            }
+            if (key == KeyEvent.VK_H) { // if press H => means Hard
+                ailevel = 3;
+                page = 3;
+            }
+        }
+
+        if (page == 1 || page == 2) {
+            if (key == KeyEvent.VK_ESCAPE) {
+                page = 0; // home
+            }
+        }
+
         if (!gamerun1p) {
             keys[e.getKeyCode()] = true;
             handleKeyPressed();
         }
+        e.getComponent().repaint();
     }
 
     @Override
@@ -435,6 +546,8 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
     public void mouseMoved(MouseEvent e) {
         double tempXred = convertX(e.getX(), e.getComponent().getWidth()) - 5;
         double tempYred = convertY(e.getY(), e.getComponent().getHeight()) - 5;
+        //for debugging
+        System.out.println(tempXred + " " + tempYred);
         if (tempXred > 2 && tempXred < maxWidth / 2.20) {
             xred = tempXred;
         }
@@ -451,5 +564,63 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
         return (1 - y / height) * 100;
     }
 
+    public void mouseClicked(MouseEvent e) {
+        double x = convertX(e.getX(), e.getComponent().getWidth()) - 5;
+        double y = convertY(e.getY(), e.getComponent().getHeight()) - 5;
 
+        switch (page) {
+            case 0:
+                if (x >= 19 && x <= 71 && y >= 38 && y <= 44) {
+                    page = 3; //game
+                    gamerun1p = false;
+                } else if (x >= 30 && x <= 59 && y >= 27 && y <= 35) {
+                    page = 1; //help->rules
+                } else if (x >= 32 && x <= 57 && y >= 17 && y <= 25) {
+                    System.exit(0); //exit
+                } else if (x >= 22 && x <= 68 && y >= 47 && y <= 52) {
+                    page = 2; //levels
+                    gamerun1p = true;
+                }
+                break;
+            case 1:
+                page = 0;
+                break;
+            case 2:
+                if (x >= 66 && x <= 87 && y >= 75 && y <= 86) {
+                    page = 0;
+                } else if (x >= 12 && x <= 77 && y >= 39 && y <= 49) {
+                    ailevel = 1;
+                    page = 3;
+                } else if (x >= 12 && x <= 77 && y >= 27 && y <= 37) {
+                    ailevel = 2;
+                    page = 3;
+                } else if (x >= 12 && x <= 77 && y >= 15 && y <= 25) {
+                    ailevel = 3;
+                    page = 3;
+                }
+                break;
+        }
+        e.getComponent().repaint();
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
 }
