@@ -74,8 +74,6 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
         gl.glLoadIdentity();
 
-        // draw instructions image.
-//        drawRoles(gl);
         if (gamerun1p) {
             run1p(gl);
         } else
@@ -121,6 +119,7 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
     }
 
 // Ai difficulty of the game
+
     // A general AI method to handle common logic
     void AILogic(double speedX, double speedY, double minX, double maxX, double minY, double maxY) {
     // Adjust Y position
@@ -156,6 +155,7 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
                 10, 80
         );
     }
+
     // Medium AI
     void aiMid() {
         if (xball > 45) {
@@ -167,6 +167,7 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
             );
         }
     }
+
     // Hard AI
     void aiHard() {
         AILogic(
@@ -223,25 +224,6 @@ public class AirHockey extends AnimListener implements MouseMotionListener {
             aiEasy();
 //            System.out.println("Easy");
         }
-    }
-
-    // draw instructions [game roles]
-    void drawRoles(GL gl) {
-        gl.glEnable(GL.GL_BLEND);
-        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[texture.length-1]);
-        gl.glPushMatrix();
-        gl.glBegin(GL.GL_QUADS);
-        gl.glTexCoord2f(0.0f, 0.0f);
-        gl.glVertex3f(-1.0f, -1.0f, -1.0f);
-        gl.glTexCoord2f(1.0f, 0.0f);
-        gl.glVertex3f(1.0f, -1.0f, -1.0f);
-        gl.glTexCoord2f(1.0f, 1.0f);
-        gl.glVertex3f(1.0f, 1.0f, -1.0f);
-        gl.glTexCoord2f(0.0f, 1.0f);
-        gl.glVertex3f(-1.0f, 1.0f, -1.0f);
-        gl.glEnd();
-        gl.glPopMatrix();
-        gl.glDisable(GL.GL_BLEND);
     }
 
     public void calcscore() {

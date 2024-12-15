@@ -13,6 +13,7 @@ import javax.swing.*;
 
 public class Run extends JFrame {
     public static void main(String[] args) {
+        System.setProperty("sun.java2d.uiScale", "1.0");
         new Run();
     }
 
@@ -41,18 +42,19 @@ public class Run extends JFrame {
         AnimListener listener = new AirHockey();
         glcanvas = new GLCanvas();
         glcanvas.addGLEventListener(listener);
-        glcanvas.addGLEventListener(listener);
+//        glcanvas.addGLEventListener(listener);
         glcanvas.addKeyListener(listener);
 //        glcanvas.addMouseListener((MouseListener) listener);
         glcanvas.addMouseMotionListener((MouseMotionListener) listener);
+        glcanvas.addMouseListener((MouseListener) listener);
         getContentPane().add(glcanvas, BorderLayout.CENTER);
-        animator = new FPSAnimator(glcanvas, 90);
+        animator = new FPSAnimator(glcanvas, 60);
 
 //        JPanel panel = new JPanel();
 //        panel.add(startButton, BorderLayout.CENTER);
 //        add(panel, BorderLayout.SOUTH);
 
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT)); // المحاذاة لليسار
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER)); // المحاذاة لليسار
         panel.add(startButton);  // إضافة الزر إلى اللوحة
         add(panel, BorderLayout.SOUTH);  // إضافة اللوحة في الجزء السفلي
 
