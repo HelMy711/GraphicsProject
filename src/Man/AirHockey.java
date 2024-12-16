@@ -47,12 +47,12 @@ Timer T=new Timer();
     int player1Score = scoreRed, player2Score = scoreBlue;
     Scanner input = new Scanner(System.in);
 
-    SoundPlayer goalRed = new SoundPlayer("C:\\Users\\alikh\\g\\mainProject_304\\sound/goolRed.wav");
-    SoundPlayer goalBlue = new SoundPlayer("C:\\Users\\alikh\\g\\mainProject_304\\sound/goolBlue.wav");
-    SoundPlayer CollisionSound = new SoundPlayer("C:\\Users\\alikh\\g\\mainProject_304\\sound/puckHitWall.wav");
-    SoundPlayer playerCollision = new SoundPlayer("C:\\Users\\alikh\\g\\mainProject_304\\sound/puckHitPaddle.wav");
-    SoundPlayer backgroundSound = new SoundPlayer("C:\\Users\\alikh\\g\\mainProject_304\\sound/puckHitPaddle.wav");
-    SoundPlayer win = new SoundPlayer("C:\\Users\\alikh\\g\\mainProject_304\\sound/edrab.wav");
+    SoundPlayer goalRed = new SoundPlayer("sound/goolRed.wav");
+    SoundPlayer goalBlue = new SoundPlayer("sound/goolBlue.wav");
+    SoundPlayer CollisionSound = new SoundPlayer("sound/puckHitWall.wav");
+    SoundPlayer playerCollision = new SoundPlayer("sound/puckHitPaddle.wav");
+    SoundPlayer backgroundSound = new SoundPlayer("sound/puckHitPaddle.wav");
+    SoundPlayer win = new SoundPlayer("sound/edrab.wav");
 
 
 
