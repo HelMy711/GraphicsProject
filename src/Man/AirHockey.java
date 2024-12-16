@@ -13,12 +13,6 @@ import java.util.*;
 import java.io.*;
 
 public class AirHockey extends AnimListener implements MouseMotionListener, MouseListener, KeyListener {
-    int tem = 0;
-    int tem2;
-    double pox = 0;
-    double poy;
-    double poxb = 0;
-    double poyb = 0;
     int maxWidth = 100;
     int maxHeight = 100;
     int s1 = 4;
@@ -32,13 +26,11 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
     boolean gameended = false;
     double xball = 45;
     double yball = 45;
-    double xred = 10;
-    double yred = 45;
-    double xblue = 80;
-    double yblue = 45;
+    player red = new player(10, 45);
+    player blue = new player(80, 45);
     boolean gamerun1p = true; /* For two players make it false */
     boolean start = true;
-    Timer T=new Timer();
+    Timer T = new Timer();
     int scoreRed = 0;
     int scoreBlue = 0;
     int highScore = 0;
@@ -121,7 +113,6 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
                 }
 
 
-//                if (player1Name.isEmpty()) player1Name = "Player1";
                 if (!gamerun1p && player2Name.isEmpty()) player2Name = "Player2: AI";
 
                 if (gamerun1p) {
@@ -130,13 +121,11 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
                     run2p(gl);
                 }
 //                // Check if the game is over
-                if (scoreBlue == 2 || scoreRed == 2) {
+                if (T.t2 > 5 || blue.score == 13 || red.score == 13) {
                     endGame(gl);
                     goalBlue.stop();
                     goalRed.stop();
                     win.play();
-
-
                 }
 
                 break;
@@ -150,11 +139,9 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
                 } else {
                     System.out.println(scoreBlue + scoreBlue);
                 }
-
-
                 break;
             case 5:
-                draw(gl, textureNames.length-1);
+                draw(gl, textureNames.length - 1);
                 break;
         }
 
@@ -169,8 +156,8 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
     void run2p(GL gl) {
         DrawBackground(gl);
         DrawBackground(gl);
-        DrawSprite(gl, xblue, yblue, 0, 1);
-        DrawSprite(gl, xred, yred, 3, 1);
+        DrawSprite(gl, blue.x, blue.y, 0, 1);
+        DrawSprite(gl, red.x, red.y, 3, 1);
         DrawSprite(gl, xball, yball, 2, 1);
         if (xball == maxWidth && yball == maxHeight) {
             xball = 45;
@@ -206,69 +193,97 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
 // Ai difficulty of the game
 
     // A general AI method to handle common logic
-    void AILogic(double speedX, double speedY, double minX, double maxX, double minY, double maxY) {
-        // Adjust Y position
-        if (yball > yblue) {
-            yblue += speedY;
-        } else if (yball < yblue) {
-            yblue -= speedY;
+    // AI logic with ball position prediction
+    void AILogicWithPrediction(double speedX, double speedY, double minX, double maxX, double minY, double maxY) {
+        // 1. حساب الزمن الذي ستصل فيه الكرة إلى نفس X الخاصة باللاعب الأزرق
+        double timeToReach = (blue.x -5- xball) / speedX;
+
+        // 2. توقع موقع الكرة بناءً على سرعتها والوقت المتوقع
+        double predictedY = yball + (speedY * timeToReach);
+
+        // ضمان أن موقع التوقع يقع ضمن الإطار
+        predictedY = Math.max(minY, Math.min(predictedY, maxY));
+
+        // 3. تحريك اللاعب الأزرق تدريجيًا نحو الموقع المتوقع
+        if (blue.y < predictedY) {
+            blue.y += speedY; // التحرك لأسفل
+        } else if (blue.y > predictedY) {
+            blue.y -= speedY; // التحرك لأعلى
         }
 
-        // Adjust X position
-        if (xball > xblue) {
-            xblue += speedX;
-        } else if (xball < xblue) {
-            xblue -= speedX;
-        }
-
-        // Clamp X and Y to allowed ranges
-        xblue = Math.max(minX, Math.min(xblue, maxX));
-        yblue = Math.max(minY, Math.min(yblue, maxY));
-
-        // Add random adjustments to avoid glitches
-        if (Math.abs(yblue - yball) < 10 && Math.abs(xblue - xball) < 10) {
-            yblue += (Math.random() * 4) - 2;
-            xblue += (Math.random() * 4) - 2;
-        }
+        // 4. التحكم في الحدود لضمان بقاء اللاعب داخل الإطار
+        blue.x = Math.max(minX, Math.min(blue.x, maxX));
+        blue.y = Math.max(minY, Math.min(blue.y, maxY));
     }
 
     // Easy AI
     void aiEasy() {
-        AILogic(
-                1,
-                0.05,
-                60, 80,
-                10, 80
-        );
+        double timeToReach = (blue.x - 5 - xball) / speedx; // زمن الوصول
+        double predictedY = yball + (speedy * timeToReach); // توقع Y
+
+        // ضبط التوقع ضمن الإطار
+        predictedY = Math.max(10, Math.min(predictedY, 85));
+
+        // تحرك نحو التوقع
+        if (blue.y < predictedY) {
+            blue.y += 0.1; // سرعة Y متوسطة
+        } else if (blue.y > predictedY) {
+            blue.y -= 0.1;
+        }
+        // ضمان عدم تجاوز الحدود
+        blue.y = Math.max(10, Math.min(blue.y, 85));
     }
 
     // Medium AI
     void aiMid() {
-        if (xball > 45) {
-            AILogic(
-                    0.01,
-                    1,
-                    70, 82,
-                    10, 80
-            );
+        // حساب زمن الوصول بناءً على الفرق الأفقي وسرعة الكرة
+        double timeToReach = (blue.x - xball) / speedx;
+
+        // توقع موقع Y و X المستقبلي
+        double predictedY = yball + (speedy * timeToReach);
+        double predictedX = xball + (speedx * timeToReach);
+
+        // ضبط التوقع ضمن الإطار
+        predictedY = Math.max(10, Math.min(predictedY, 85));
+        predictedX = Math.max(10, Math.min(predictedX, 85)); // حدود X مضافة
+
+        // تحرك نحو الموقع المتوقع على المحور Y
+        if (blue.y < predictedY) {
+            blue.y += 1.0; // سرعة Y متوسطة
+        } else if (blue.y > predictedY) {
+            blue.y -= 1.0;
         }
+
+        // تحرك نحو الموقع المتوقع على المحور X
+        if (blue.x < predictedX) {
+            blue.x += 1.0; // سرعة X متوسطة
+        } else if (blue.x > predictedX) {
+            blue.x -= 1.0;
+        }
+
+        // ضمان عدم تجاوز الحدود على المحورين
+        blue.y = Math.max(10, Math.min(blue.y, 85));
+        blue.x = Math.max(10, Math.min(blue.x, 85));
+
     }
+
+
 
     // Hard AI
     void aiHard() {
-        AILogic(
-                2 + Math.random() * 0.2,
-                1.3 + Math.random() * 0.2,
-                60, 82,
-                10, 90
+        AILogicWithPrediction(
+                2, // سرعة X
+                1.5, // سرعة Y
+                60, 85,   // حدود X
+                10, 85    // حدود Y
         );
     }
 
     // for 1 player and AI methods
     void run1p(GL gl) {
         DrawBackground(gl);
-        DrawSprite(gl, xblue, yblue, 0, 1);
-        DrawSprite(gl, xred, yred, 3, 1);
+        DrawSprite(gl, blue.x, blue.y, 0, 1);
+        DrawSprite(gl, red.x, red.y, 3, 1);
         DrawSprite(gl, xball, yball, 2, 1);
         if (xball == maxWidth && yball == maxHeight) {
             xball = 45;
@@ -489,15 +504,11 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
     public void endGame(GL gl) {
         T.t2 = 4;
         page = 4;
-//        scoreRed = 0;
-//        scoreBlue = 0;
         // make all values are default value
         xball = 45;
         yball = 45;
-        xred = 10;
-        yred = 45;
-        xblue = 80;
-        yblue = 45;
+        blue.set(80, 45);
+        red.set(10, 45);
         speedx = .3;
         speedy = .2;
         ballStationary = true;
@@ -598,12 +609,12 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
 
     void checkCollision() {
         // حساب المسافة واتجاه التصادم
-        double dxBlue = xball - xblue;
-        double dyBlue = yball - yblue;
+        double dxBlue = xball - blue.x;
+        double dyBlue = yball - blue.y;
         double distanceBlue = Math.sqrt(dxBlue * dxBlue + dyBlue * dyBlue);
 
-        double dxRed = xball - xred;
-        double dyRed = yball - yred;
+        double dxRed = xball - red.x;
+        double dyRed = yball - red.y;
         double distanceRed = Math.sqrt(dxRed * dxRed + dyRed * dyRed);
 
         double collisionRadius = 8;
@@ -629,10 +640,11 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
             playerCollision.play();
         }
 
-        if (xball < 2 || xball > maxWidth-13) {
+        if (xball < 2 || xball > maxWidth - 13) {
             speedx = -speedx;
-            CollisionSound.play();        }
-        if (yball <7 || yball > maxHeight-18) {
+            CollisionSound.play();
+        }
+        if (yball < 7 || yball > maxHeight - 18) {
             speedy = -speedy;
             CollisionSound.play();
         }
@@ -660,20 +672,20 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
     private boolean[] keys = new boolean[256];
 
     public void handleKeyPressed() {
-        if (keys[KeyEvent.VK_UP] && yblue < maxHeight - 20) {
-            yblue += 5;
+        if (keys[KeyEvent.VK_UP] && blue.y < maxHeight - 20) {
+            blue.y += 5;
         }
 
-        if (keys[KeyEvent.VK_DOWN] && yblue > 12) {
-            yblue -= 5;
+        if (keys[KeyEvent.VK_DOWN] && blue.y > 12) {
+            blue.y -= 5;
         }
 
-        if (keys[KeyEvent.VK_LEFT] && xblue > (maxWidth / 2)) {
-            xblue -= 5;
+        if (keys[KeyEvent.VK_LEFT] && blue.x > (maxWidth / 2)) {
+            blue.x -= 5;
         }
 
-        if (keys[KeyEvent.VK_RIGHT] && xblue < maxWidth - 15) {
-            xblue += 5;
+        if (keys[KeyEvent.VK_RIGHT] && blue.x < maxWidth - 15) {
+            blue.x += 5;
         }
     }
 
@@ -756,10 +768,10 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
         //for debugging
         System.out.println(tempXred + " " + tempYred);
         if (tempXred > 2 && tempXred < maxWidth / 2.4) {
-            xred = tempXred;
+            red.x = tempXred;
         }
         if (tempYred > 6 && tempYred < maxHeight - 16) {
-            yred = tempYred;
+            red.y = tempYred;
         }
     }
 
