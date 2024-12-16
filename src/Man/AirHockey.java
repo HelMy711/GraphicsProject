@@ -45,6 +45,15 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
     int player1Score = scoreRed, player2Score = scoreBlue;
     Scanner input = new Scanner(System.in);
 
+    SoundPlayer goalRed = new SoundPlayer("sound/goolRed.wav");
+    SoundPlayer goalBlue = new SoundPlayer("sound/goolBlue.wav");
+    SoundPlayer CollisionSound = new SoundPlayer("sound/puckHitWall.wav");
+    SoundPlayer playerCollision = new SoundPlayer("sound/puckHitPaddle.wav");
+    SoundPlayer backgroundSound = new SoundPlayer("sound/puckHitPaddle.wav");
+    SoundPlayer win = new SoundPlayer("sound/edrab.wav");
+
+
+
     //  TextRenderer renderer = new TextRenderer(new Font("sanaSerif", Font.BOLD, 10));
     String[] textureNames = {
             "bluehockeystick.png", //0
@@ -84,7 +93,7 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
         GL gl = gld.getGL();
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
         gl.glLoadIdentity();
-
+        backgroundSound.isPlaying();
         switch (page) {
             case 0: // Home
 
@@ -120,6 +129,10 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
 //                // Check if the game is over
                 if (scoreBlue == 2 || scoreRed == 2) {
                     endGame(gl);
+                    goalBlue.stop();
+                    goalRed.stop();
+                    win.play();
+
 
                 }
 
@@ -316,6 +329,8 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
 
         if (xball <= 2 && yball >= 30 && yball <= 60) { //blueOne
             scoreBlue++;
+            goalRed.stop();
+            goalBlue.play();
             xball = maxWidth;
             yball = maxHeight;
             s4++;
@@ -333,6 +348,8 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
         }
         if (xball >= 85 && yball >= 30 && yball <= 60) { //redOne
             scoreRed++;
+            goalBlue.stop();
+            goalRed.play();
 
             xball = maxWidth;
             yball = maxHeight;
@@ -577,26 +594,51 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
     }
 
     void checkCollision() {
-        // blue player
-        if (Math.abs(xball - xblue) < 5 && Math.abs(yball - yblue) < 10) {
+        // حساب المسافة واتجاه التصادم
+        double dxBlue = xball - xblue;
+        double dyBlue = yball - yblue;
+        double distanceBlue = Math.sqrt(dxBlue * dxBlue + dyBlue * dyBlue);
+
+        double dxRed = xball - xred;
+        double dyRed = yball - yred;
+        double distanceRed = Math.sqrt(dxRed * dxRed + dyRed * dyRed);
+
+        double collisionRadius = 8;
+
+        // التصادم مع اللاعب الأزرق
+        if (distanceBlue < collisionRadius) {
             ballStationary = false;
-            speedx = (xball - xblue) * 0.1;
-            speedy = (yball - yblue) * 0.1;
-        }
-        // red player
-        if (Math.abs(xball - xred) < 5 && Math.abs(yball - yred) < 10) {
-            ballStationary = false;
-            speedx = (xball - xred) * 0.1;
-            speedy = (yball - yred) * 0.1;
+//            goalBlue.stop();
+//            goalRed.stop();
+            playerCollision.play();
+
+            speedx = (dxBlue / distanceBlue) * 0.8;
+            speedy = (dyBlue / distanceBlue) * 0.8;
         }
 
-        // collision with walls الحيطه يعني
-        if (xball < 2 || xball > maxWidth - 13) {
+        // التصادم مع اللاعب الأحمر
+        if (distanceRed < collisionRadius) {
+            ballStationary = false;
+            speedx = (dxRed / distanceRed) * 1;
+            speedy = (dyRed / distanceRed) * 1;
+//            goalBlue.stop();
+//            goalRed.stop();
+            playerCollision.play();
+        }
+
+        if (xball < 2 || xball > maxWidth-13) {
             speedx = -speedx;
-        }
-        if (yball < 7 || yball > maxHeight - 18) {
+            CollisionSound.play();        }
+        if (yball <7 || yball > maxHeight-18) {
             speedy = -speedy;
+            CollisionSound.play();
         }
+
+        xball += speedx;
+        yball += speedy;
+
+        speedx *= 0.9999999;
+        speedy *= 0.999999999;
     }
 
     @Override
