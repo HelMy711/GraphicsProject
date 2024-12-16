@@ -12,6 +12,12 @@ import java.util.*;
 import java.io.*;
 
 public class AirHockey extends AnimListener implements MouseMotionListener, MouseListener, KeyListener {
+    int tem = 0;
+    int tem2;
+    double pox = 0;
+    double poy;
+    double poxb = 0;
+    double poyb = 0;
     int maxWidth = 100;
     int maxHeight = 100;
     int s1 = 4;
@@ -31,11 +37,7 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
     double yblue = 45;
     boolean gamerun1p = true; /* For two players make it false */
     boolean start = true;
-    int t1 = 4;
-    int t2 = 4;
-    int t3 = 4;
-    int t4 = 4;
-    int time = 120;
+Timer T=new Timer();
     int scoreRed = 0;
     int scoreBlue = 0;
     int highScore = 0;
@@ -45,12 +47,12 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
     int player1Score = scoreRed, player2Score = scoreBlue;
     Scanner input = new Scanner(System.in);
 
-    SoundPlayer goalRed = new SoundPlayer("sound/goolRed.wav");
-    SoundPlayer goalBlue = new SoundPlayer("sound/goolBlue.wav");
-    SoundPlayer CollisionSound = new SoundPlayer("sound/puckHitWall.wav");
-    SoundPlayer playerCollision = new SoundPlayer("sound/puckHitPaddle.wav");
-    SoundPlayer backgroundSound = new SoundPlayer("sound/puckHitPaddle.wav");
-    SoundPlayer win = new SoundPlayer("sound/edrab.wav");
+    SoundPlayer goalRed = new SoundPlayer("C:\\Users\\alikh\\g\\mainProject_304\\sound/goolRed.wav");
+    SoundPlayer goalBlue = new SoundPlayer("C:\\Users\\alikh\\g\\mainProject_304\\sound/goolBlue.wav");
+    SoundPlayer CollisionSound = new SoundPlayer("C:\\Users\\alikh\\g\\mainProject_304\\sound/puckHitWall.wav");
+    SoundPlayer playerCollision = new SoundPlayer("C:\\Users\\alikh\\g\\mainProject_304\\sound/puckHitPaddle.wav");
+    SoundPlayer backgroundSound = new SoundPlayer("C:\\Users\\alikh\\g\\mainProject_304\\sound/puckHitPaddle.wav");
+    SoundPlayer win = new SoundPlayer("C:\\Users\\alikh\\g\\mainProject_304\\sound/edrab.wav");
 
 
 
@@ -170,8 +172,8 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
             xball = 45;
             yball = 45;
         }
-        time--;
-        calctime();
+        T.time--;
+        T.calctime();
         calcscore();
         if (!ballStationary) {
             xball += speedx;
@@ -186,11 +188,11 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
         }
         checkCollision();
 
-        Drawnum(gl, 53, 91, t3, 0.7F);
-        Drawnum(gl, 60, 91, t4, 0.7F);
+        Drawnum(gl, 53, 91, T.t3, 0.7F);
+        Drawnum(gl, 60, 91, T.t4, 0.7F);
         Drawnum(gl, 46, 91, 16, 0.6F);
-        Drawnum(gl, 39, 91, t2, 0.7F);
-        Drawnum(gl, 32, 91, t1, 0.7F);
+        Drawnum(gl, 39, 91, T.t2, 0.7F);
+        Drawnum(gl, 32, 91, T.t1, 0.7F);
         Drawnum(gl, 20, -1, s1, 0.7F);
         Drawnum(gl, 27, -1, s2, 0.7F);
         Drawnum(gl, 70, -1, s3, 0.7F);
@@ -268,8 +270,8 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
             xball = 45;
             yball = 45;
         }
-        time--;
-        calctime();
+        T.time--;
+        T.calctime();
         calcscore();
         if (!ballStationary) {
             xball += speedx;
@@ -284,11 +286,11 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
         }
         checkCollision();
 
-        Drawnum(gl, 53, 91, t3, 0.7F);
-        Drawnum(gl, 60, 91, t4, 0.7F);
+        Drawnum(gl, 53, 91, T.t3, 0.7F);
+        Drawnum(gl, 60, 91, T.t4, 0.7F);
         Drawnum(gl, 46, 91, 16, 0.6F);
-        Drawnum(gl, 39, 91, t2, 0.7F);
-        Drawnum(gl, 32, 91, t1, 0.7F);
+        Drawnum(gl, 39, 91, T.t2, 0.7F);
+        Drawnum(gl, 32, 91, T.t1, 0.7F);
         Drawnum(gl, 20, -1, s1, 0.7F);
         Drawnum(gl, 27, -1, s2, 0.7F);
         Drawnum(gl, 70, -1, s3, 0.7F);
@@ -463,7 +465,7 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
     }
 
     public void endGame(GL gl) {
-        t2 = 4;
+        T.t2 = 4;
         page = 4;
 //        scoreRed = 0;
 //        scoreBlue = 0;
@@ -481,10 +483,10 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
         s2 = 4;
         s3 = 4;
         s4 = 4;
-        t1 = 4;
-        t2 = 4;
-        t3 = 4;
-        t4 = 4;
+        T.t1 = 4;
+        T.t2 = 4;
+        T.t3 = 4;
+        T.t4 = 4;
 
 
         player1Score = scoreRed;
@@ -492,27 +494,6 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
         saveScoresAndNamesToFile(player1Name, player1Score, player2Name, player2Score);
     }
 
-    public void calctime() {
-        if (time <= 0) {
-            time = 120;
-            t4++;
-
-            if (t4 == 14) {
-                t3++;
-                t4 = 4;
-            }
-
-            if (t3 == 10) {
-                t2++;
-                t3 = 4;
-            }
-            if (t2 == 14) {
-                t1++;
-                t2 = 4;
-            }
-        }
-
-    }
 
     public void DrawSprite(GL gl, double x, double y, int index, float scale) {
         gl.glEnable(GL.GL_BLEND);
