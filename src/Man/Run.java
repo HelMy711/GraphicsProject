@@ -114,6 +114,7 @@ public class Run extends JFrame {
         setFocusable(true);
         glcanvas.requestFocus();
     }
+
     public static void readFromFile() {
         String filename="playersNamesAndTheirScore.txt";
         BufferedReader reader = null;

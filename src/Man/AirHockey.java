@@ -7,6 +7,7 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
 import javax.swing.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.*;
 import java.io.*;
@@ -37,7 +38,7 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
     double yblue = 45;
     boolean gamerun1p = true; /* For two players make it false */
     boolean start = true;
-Timer T=new Timer();
+    Timer T=new Timer();
     int scoreRed = 0;
     int scoreBlue = 0;
     int highScore = 0;
@@ -47,14 +48,14 @@ Timer T=new Timer();
     int player1Score = scoreRed, player2Score = scoreBlue;
     Scanner input = new Scanner(System.in);
 
-    SoundPlayer goalRed = new SoundPlayer("C:\\Users\\alikh\\g\\mainProject_304\\sound/goolRed.wav");
-    SoundPlayer goalBlue = new SoundPlayer("C:\\Users\\alikh\\g\\mainProject_304\\sound/goolBlue.wav");
-    SoundPlayer CollisionSound = new SoundPlayer("C:\\Users\\alikh\\g\\mainProject_304\\sound/puckHitWall.wav");
-    SoundPlayer playerCollision = new SoundPlayer("C:\\Users\\alikh\\g\\mainProject_304\\sound/puckHitPaddle.wav");
-    SoundPlayer backgroundSound = new SoundPlayer("C:\\Users\\alikh\\g\\mainProject_304\\sound/puckHitPaddle.wav");
-    SoundPlayer win = new SoundPlayer("C:\\Users\\alikh\\g\\mainProject_304\\sound/edrab.wav");
+    SoundPlayer goalRed = new SoundPlayer("sound/goolRed.wav");
+    SoundPlayer goalBlue = new SoundPlayer("sound/goolBlue.wav");
+    SoundPlayer CollisionSound = new SoundPlayer("sound/puckHitWall.wav");
+    SoundPlayer playerCollision = new SoundPlayer("sound/puckHitPaddle.wav");
+    SoundPlayer backgroundSound = new SoundPlayer("sound/puckHitPaddle.wav");
+    SoundPlayer win = new SoundPlayer("sound/edrab.wav");
 
-
+    HighScoreImage hi = new HighScoreImage();
 
     //  TextRenderer renderer = new TextRenderer(new Font("sanaSerif", Font.BOLD, 10));
     String[] textureNames = {
@@ -64,7 +65,7 @@ Timer T=new Timer();
             "redhockeystick.png" //3
             , "0.png", "1 .png", "2 .png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png",
             "BlueWins.png", "RedWins.png", "colon.png", "colon1.png", "colon2.png",
-            "LEVELS.png", "game-rules.png", "home1.png"
+            "LEVELS.png", "game-rules.png", "home1.png", "high_scores.png"
     };
     TextureReader.Texture[] texture = new TextureReader.Texture[textureNames.length];
     int[] textures = new int[textureNames.length];
@@ -99,16 +100,16 @@ Timer T=new Timer();
         switch (page) {
             case 0: // Home
 
-                draw(gl, textureNames.length - 1);
+                draw(gl, textureNames.length - 2);
 
                 break;
             case 1: // Rules -> Help
 
-                draw(gl, textureNames.length - 2);
+                draw(gl, textureNames.length - 3);
 
                 break;
             case 2: // Levels
-                draw(gl, textureNames.length - 3);
+                draw(gl, textureNames.length - 4);
                 break;
             case 3: // Game
                 if (start) {
@@ -151,6 +152,9 @@ Timer T=new Timer();
                 }
 
 
+                break;
+            case 5:
+                draw(gl, textureNames.length-1);
                 break;
         }
 
@@ -424,7 +428,6 @@ Timer T=new Timer();
         }
     }
 
-
     public synchronized void saveScoresAndNamesToFile(String player1Name, int player1Score,
                                                       String player2Name, int player2Score) {
         if (player1Name == null || player1Name.isEmpty()) {
@@ -448,6 +451,25 @@ Timer T=new Timer();
             System.out.println("An error occurred while saving the scores: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    // generate high score image
+    public void generateHighScoreImage() {
+        // Read player data from file
+        List<PlayerData> players = hi.readPlayerDataFromFile();
+        if (players.isEmpty()) {
+            System.out.println("No data found in the file.");
+            return;
+        }
+
+        // Get the player with the highest score
+        PlayerData highScorePlayer = hi.getHighScore(players);
+
+        // Create an image with player data and the high score highlighted
+        BufferedImage image = hi.createImageWithScores(players, highScorePlayer);
+
+        // Save the image as a PNG file
+        hi.saveImageToFile(image, "C:\\Users\\abdel\\Desktop\\graphic-project\\mainProject_304\\Assets\\high_scores.png");
     }
 
     public void initializeGame() {
@@ -492,8 +514,8 @@ Timer T=new Timer();
         player1Score = scoreRed;
         player2Score = scoreBlue;
         saveScoresAndNamesToFile(player1Name, player1Score, player2Name, player2Score);
+        generateHighScoreImage();
     }
-
 
     public void DrawSprite(GL gl, double x, double y, int index, float scale) {
         gl.glEnable(GL.GL_BLEND);
@@ -677,6 +699,14 @@ Timer T=new Timer();
             if (key == KeyEvent.VK_H) { // go to help
                 page = 1;
             }
+            if (key == KeyEvent.VK_G) {
+                page = 5;
+            }
+
+        }
+
+        if (page == 5 && key == KeyEvent.VK_X) {
+            page = 0;
         }
 
         if (page == 2) {
