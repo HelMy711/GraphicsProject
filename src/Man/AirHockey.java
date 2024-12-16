@@ -5,6 +5,7 @@ import Texture.TextureReader;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
+import javax.swing.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.util.*;
@@ -85,10 +86,14 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
 
         switch (page) {
             case 0: // Home
+
                 draw(gl, textureNames.length - 1);
+
                 break;
             case 1: // Rules -> Help
+
                 draw(gl, textureNames.length - 2);
+
                 break;
             case 2: // Levels
                 draw(gl, textureNames.length - 3);
@@ -111,7 +116,7 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
                     run2p(gl);
                 }
 //                // Check if the game is over
-                if (s1 == 7 && s2 == 7) {
+                if (scoreBlue == 2 || scoreRed == 2) {
                     endGame();
                     page = 0;
                     start = true;
@@ -413,10 +418,13 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
 
     public void initializeGame() {
         System.out.println("Enter player name:");
-        player1Name = input.nextLine();
+
+        player1Name = (String) JOptionPane.showInputDialog(null, "Enter Name", "Player 10000"); //java methods  Swing library
+
         if (!gamerun1p) {
             System.out.println("Enter player 2 name:");
-            player2Name = input.nextLine();
+
+            player2Name = (String) JOptionPane.showInputDialog(null, "Enter Name", "Player 10000");
         }
         highScore = getHighScore(); // Load high score from file
     }
