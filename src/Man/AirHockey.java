@@ -121,23 +121,20 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
                     run2p(gl);
                 }
 //                // Check if the game is over
-                if (T.t2 > 5 || blue.score == 13 || red.score == 13) {
+                if (T.t2 > 5 || blue.score >= 13 || red.score >= 13) {
                     endGame(gl);
                     goalBlue.stop();
                     goalRed.stop();
                     win.play();
                 }
-
                 break;
             case 4:
-                if (scoreRed > scoreBlue) {
+                if (red.score > blue.score) {
                     DrawWin(gl, 15);
                     System.out.println("RedWins");
-                } else if (scoreBlue > scoreRed) {
+                } else if (red.score < blue.score) {
                     DrawWin(gl, 14);
                     System.out.println("BlueWins");
-                } else {
-                    System.out.println(scoreBlue + scoreBlue);
                 }
                 break;
             case 5:
@@ -192,91 +189,83 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
 
 // Ai difficulty of the game
 
-    // A general AI method to handle common logic
-    // AI logic with ball position prediction
-    void AILogicWithPrediction(double speedX, double speedY, double minX, double maxX, double minY, double maxY) {
-        // 1. حساب الزمن الذي ستصل فيه الكرة إلى نفس X الخاصة باللاعب الأزرق
-        double timeToReach = (blue.x -5- xball) / speedX;
 
-        // 2. توقع موقع الكرة بناءً على سرعتها والوقت المتوقع
-        double predictedY = yball + (speedY * timeToReach);
-
-        // ضمان أن موقع التوقع يقع ضمن الإطار
-        predictedY = Math.max(minY, Math.min(predictedY, maxY));
-
-        // 3. تحريك اللاعب الأزرق تدريجيًا نحو الموقع المتوقع
-        if (blue.y < predictedY) {
-            blue.y += speedY; // التحرك لأسفل
-        } else if (blue.y > predictedY) {
-            blue.y -= speedY; // التحرك لأعلى
+    void aiMid() {
+        if (xball > 45) {
+            double timeToReach = (blue.x - 5 - xball) / speedx; // زمن الوصول
+            double predictedY = yball + (speedy * timeToReach); // توقع Y
+            predictedY = Math.max(10, Math.min(predictedY, 85));
+            if (blue.y < predictedY) {
+                blue.y += 0.6;
+            } else if (blue.y > predictedY) {
+                blue.y -= 0.6;
+            }
+            blue.y = Math.max(10, Math.min(blue.y, 85));
+        } else {
+            blue.x = 80;
+            blue.y = 45;
         }
-
-        // 4. التحكم في الحدود لضمان بقاء اللاعب داخل الإطار
-        blue.x = Math.max(minX, Math.min(blue.x, maxX));
-        blue.y = Math.max(minY, Math.min(blue.y, maxY));
-    }
-
-    // Easy AI
-    void aiEasy() {
-        double timeToReach = (blue.x - 5 - xball) / speedx; // زمن الوصول
-        double predictedY = yball + (speedy * timeToReach); // توقع Y
-
-        // ضبط التوقع ضمن الإطار
-        predictedY = Math.max(10, Math.min(predictedY, 85));
-
-        // تحرك نحو التوقع
-        if (blue.y < predictedY) {
-            blue.y += 0.1; // سرعة Y متوسطة
-        } else if (blue.y > predictedY) {
-            blue.y -= 0.1;
-        }
-        // ضمان عدم تجاوز الحدود
-        blue.y = Math.max(10, Math.min(blue.y, 85));
     }
 
     // Medium AI
-    void aiMid() {
-        // حساب زمن الوصول بناءً على الفرق الأفقي وسرعة الكرة
-        double timeToReach = (blue.x - xball) / speedx;
+    void aiEasy() {
+        if (xball > 40) { // الكرة في نطاق الهجوم
+            double timeToReach = (blue.x - 5 - xball) / speedx; // زمن الوصول للكرة
+            double predictedY = yball + (speedy * timeToReach); // توقع إحداثي Y للكرة
+            predictedY = Math.max(10, Math.min(predictedY, 85)); // تقييد Y ضمن الحدود
 
-        // توقع موقع Y و X المستقبلي
-        double predictedY = yball + (speedy * timeToReach);
-        double predictedX = xball + (speedx * timeToReach);
+            // تحرك اللاعب باتجاه موقع الكرة المتوقع
+            if (blue.y < predictedY) {
+                blue.y += 1;
+            } else if (blue.y > predictedY) {
+                blue.y -= 1;
+            }
 
-        // ضبط التوقع ضمن الإطار
-        predictedY = Math.max(10, Math.min(predictedY, 85));
-        predictedX = Math.max(10, Math.min(predictedX, 85)); // حدود X مضافة
+            blue.y = Math.max(10, Math.min(blue.y, 85));
+        } else {
+            double defenseX = 80;
+            double defenseY = 45;
 
-        // تحرك نحو الموقع المتوقع على المحور Y
-        if (blue.y < predictedY) {
-            blue.y += 1.0; // سرعة Y متوسطة
-        } else if (blue.y > predictedY) {
-            blue.y -= 1.0;
+            if (blue.x < defenseX) {
+                blue.x += 0.5;
+            } else if (blue.x > defenseX) {
+                blue.x -= 0.5;
+            }
+
+            if (blue.y < defenseY) {
+                blue.y += 0.5;
+            } else if (blue.y > defenseY) {
+                blue.y -= 0.5;
+            }
+
+            blue.x = Math.max(50, Math.min(blue.x, 85));
+            blue.y = Math.max(10, Math.min(blue.y, 85));
         }
-
-        // تحرك نحو الموقع المتوقع على المحور X
-        if (blue.x < predictedX) {
-            blue.x += 1.0; // سرعة X متوسطة
-        } else if (blue.x > predictedX) {
-            blue.x -= 1.0;
-        }
-
-        // ضمان عدم تجاوز الحدود على المحورين
-        blue.y = Math.max(10, Math.min(blue.y, 85));
-        blue.x = Math.max(10, Math.min(blue.x, 85));
-
     }
 
 
-
-    // Hard AI
     void aiHard() {
-        AILogicWithPrediction(
-                2, // سرعة X
-                1.5, // سرعة Y
-                60, 85,   // حدود X
-                10, 85    // حدود Y
-        );
+        if (blue.y < yball) {
+            blue.y += 1.6;
+        } else if (blue.y > yball) {
+            blue.y -= 1.6;
+        }
+
+        blue.x = 75;
+        blue.y = Math.max(10, Math.min(blue.y, 85));
+        if (xball > blue.x) {
+            blue.x -= 1;
+            if (blue.y > 50) {
+                blue.y -= 1;
+            }
+            if (blue.y < 50) {
+                blue.y += 1;
+            }
+        }
+        if (Math.abs(blue.x-xball) >10&& Math.abs(blue.y-yball)>10){
+            blue.x+=(Math.random()*4)-2;
+            blue.y+=(Math.random()*4)-2;
+        }
     }
 
     // for 1 player and AI methods
@@ -348,8 +337,9 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
     public void calcscore() {
         highScore = getHighScore();
 
-        if (xball <= 2 && yball >= 30 && yball <= 60) { //blueOne
-            scoreBlue++;
+        if (xball <= 3 && yball >= 30 && yball <= 60) {
+            //blueOne
+            blue.score++;
             goalRed.stop();
             goalBlue.play();
             xball = maxWidth;
@@ -368,7 +358,7 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
             speedy = 0;
         }
         if (xball >= 85 && yball >= 30 && yball <= 60) { //redOne
-            scoreRed++;
+            red.score++;
             goalBlue.stop();
             goalRed.play();
 
@@ -489,8 +479,8 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
 
     public void initializeGame() {
         System.out.println("Enter player name:");
-        scoreRed = 0;
-        scoreBlue = 0;
+        blue.score = 0;
+        red.score = 0;
         player1Name = (String) JOptionPane.showInputDialog(null, "Enter Name", "Player 10000"); //java methods  Swing library
 
         if (!gamerun1p) {
@@ -502,7 +492,6 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
     }
 
     public void endGame(GL gl) {
-        T.t2 = 4;
         page = 4;
         // make all values are default value
         xball = 45;
@@ -520,8 +509,6 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
         T.t2 = 4;
         T.t3 = 4;
         T.t4 = 4;
-
-
         player1Score = scoreRed;
         player2Score = scoreBlue;
         saveScoresAndNamesToFile(player1Name, player1Score, player2Name, player2Score);

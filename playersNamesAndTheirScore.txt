@@ -327,3 +327,53 @@ Player1: Player 10000, Score: 9
 ----------------------
 Player1: Player 10000, Score: 3
 ----------------------
+Player1: Player 10000, Score: 0
+----------------------
+Player1: Player 10000, Score: 0
+Player2: Player 10000, Score: 0
+----------------------
+Player1: Player 10000, Score: 0
+Player2: Player 10000, Score: 0
+----------------------
+Player1: Player 10000, Score: 0
+Player2: Player 10000, Score: 0
+----------------------
+Player1: Player 10000, Score: 0
+Player2: Player 10000, Score: 0
+----------------------
+Player1: Player 10000, Score: 0
+----------------------
+Player1: Player 10000, Score: 0
+----------------------
+Player1: Player 10000, Score: 0
+----------------------
+Player1: Player 10000, Score: 0
+----------------------
+Player1: Player 10000, Score: 0
+Player2: Player 10000, Score: 0
+----------------------
+Player1: Player 10000, Score: 0
+Player2: Player 10000, Score: 0
+----------------------
+Player1: Player 10000, Score: 0
+----------------------
+Player1: Player 10000, Score: 0
+Player2: Player 10000, Score: 0
+----------------------
+Player1: Player 10000, Score: 0
+Player2: Player 10000, Score: 0
+----------------------
+Player1: Player 10000, Score: 0
+----------------------
+Player1: Player 10000, Score: 0
+----------------------
+Player1: Player 10000, Score: 0
+----------------------
+Player1: Player 10000, Score: 0
+----------------------
+Player1: Player 10000, Score: 0
+----------------------
+Player1: Player 10000, Score: 0
+----------------------
+Player1: Player 10000, Score: 0
+----------------------
