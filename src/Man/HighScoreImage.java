@@ -113,6 +113,6 @@ public class HighScoreImage {
         BufferedImage image = createImageWithScores(players, highScorePlayer);
 
         // Save the image to a file
-        saveImageToFile(image, "C:\\Users\\abdel\\Desktop\\graphic-project\\mainProject_304\\Assets\\high_scores.png");
+        saveImageToFile(image, "C:\\Users\\user\\Documents\\graph1\\mainProject_304\\Assets\\high_scores.png");
     }
 }

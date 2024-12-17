@@ -31,13 +31,12 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
     boolean gamerun1p = true; /* For two players make it false */
     boolean start = true;
     Timer T = new Timer();
-    int scoreRed = 0;
-    int scoreBlue = 0;
+
     int highScore = 0;
     private int lastHighScore = -1;
     static int page;
     String player1Name = "", player2Name = "";
-    int player1Score = scoreRed, player2Score = scoreBlue;
+    int player1Score = red.score, player2Score = blue.score;
     Scanner input = new Scanner(System.in);
 
     SoundPlayer goalRed = new SoundPlayer("sound/goolRed.wav");
@@ -109,7 +108,6 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
                     initializeGame();
                     System.out.println("Page: " + page + ", Player1 Score: " + player1Score + ", Player2 Score: " + player2Score + "\n");
                     System.out.println("Saving scores: " + player1Name + " - " + player1Score + ", " + player2Name + " - " + player2Score + "\n");
-//                    System.out.println("Game initialized with players: " + player1Name + ", " + player2Name);
                     start = false;
                 }
 
@@ -124,7 +122,7 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
                     backgroundSound.stop();
                 }
 //                // Check if the game is over
-                if (T.t2 > 5 || blue.score >= 13 || red.score >= 13) {
+                if (T.t2 > 5 || blue.score >= 5 || red.score >= 5) {
                     endGame(gl);
                     goalBlue.stop();
                     goalRed.stop();
@@ -377,8 +375,8 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
             speedx = 0;
             speedy = 0;
         }
-        if (Math.max(scoreBlue, scoreRed) > highScore) {
-            highScore = Math.max(scoreBlue, scoreRed);
+        if (Math.max(blue.score, red.score) > highScore) {
+            highScore = Math.max(blue.score, red.score);
             saveHighScore(highScore);
         }
 
@@ -387,8 +385,8 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
             lastHighScore = highScore;
         }
 
-        player1Score = scoreRed;
-        player2Score = scoreBlue;
+        player1Score = red.score;
+        player2Score = blue.score;
 
 //        saveHighScore(highScore);
 //        System.out.println("highScore " + highScore);
@@ -466,7 +464,7 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
         BufferedImage image = hi.createImageWithScores(players, highScorePlayer);
 
         // Save the image as a PNG file
-        hi.saveImageToFile(image, "C:\\Users\\abdel\\Desktop\\graphic-project\\mainProject_304\\Assets\\high_scores.png");
+        hi.saveImageToFile(image, "C:\\Users\\user\\Documents\\graph1\\mainProject_304\\Assets\\high_scores.png");
     }
 
     public void initializeGame() {
@@ -477,6 +475,9 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
         speedx=0;
         player1Name = (String) JOptionPane.showInputDialog(null, "Enter Name", "Player 10000"); //java methods  Swing library
 
+//        if (JOptionPane.CANCEL_OPTION == JOptionPane.CLOSED_OPTION){
+//            page=0;
+//        }
         if (!gamerun1p) {
             System.out.println("Enter player 2 name:");
 
@@ -503,8 +504,8 @@ public class AirHockey extends AnimListener implements MouseMotionListener, Mous
         T.t2 = 4;
         T.t3 = 4;
         T.t4 = 4;
-        player1Score = scoreRed;
-        player2Score = scoreBlue;
+        player1Score = red.score;
+        player2Score = blue.score;
         saveScoresAndNamesToFile(player1Name, player1Score, player2Name, player2Score);
         generateHighScoreImage();
     }

@@ -34,14 +34,14 @@ public class Run extends JFrame {
         GLCanvas glcanvas;
         JButton startButton = new JButton("Start");
 
-        JButton Button2 = new JButton("HighScore");
+
 
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!isAnimating) {
                     animator.start();
-                    startButton.setText("Stop");
+                    startButton.setText("pause");
                     isAnimating = true;
                 } else {
                     animator.stop();
@@ -52,58 +52,18 @@ public class Run extends JFrame {
         });
 
 
-
-
-        Button2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                System.out.println("============================================");
-                System.out.println("============================================");
-                 readFromFile();
-                System.out.println("============================================");
-                System.out.println("============================================");
-
-            }
-        });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // إعداد GLCanvas والمستمعات
         AnimListener listener = new AirHockey();
         glcanvas = new GLCanvas();
         glcanvas.addGLEventListener(listener);
-//        glcanvas.addGLEventListener(listener);
+
         glcanvas.addKeyListener(listener);
-//        glcanvas.addMouseListener((MouseListener) listener);
         glcanvas.addMouseMotionListener((MouseMotionListener) listener);
         glcanvas.addMouseListener((MouseListener) listener);
         getContentPane().add(glcanvas, BorderLayout.CENTER);
         animator = new FPSAnimator(glcanvas, 60);
 
-//        JPanel panel = new JPanel();
-//        panel.add(startButton, BorderLayout.CENTER);
-//        add(panel, BorderLayout.SOUTH);
-
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER)); // المحاذاة لليسار
         panel.add(startButton);  // إضافة الزر إلى اللوحة
-        panel.add(Button2);
         add(panel, BorderLayout.SOUTH);  // إضافة اللوحة في الجزء السفلي
 
         setTitle("Air Hockey");
